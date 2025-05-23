@@ -1,27 +1,27 @@
 import React from 'react';
-import styles from './ResponseList.module.css';
+import './ResponseList.css';
 
 function ResponseList({ responses = [] }) {
   if (responses.length === 0) {
-    return <div className={styles.noResponses}>No responses yet</div>;
+    return <div className="noResponses">No responses yet</div>;
   }
   
   return (
-    <div className={styles.responseList}>
+    <div className="responseList">
       {responses.map((response, index) => (
-        <div key={index} className={styles.responseItem}>
-          <div className={styles.responseHeader}>
+        <div key={index} className="responseItem">
+          <div className="responseHeader">
             <h3>Response #{index + 1}</h3>
-            <span className={styles.timestamp}>
+            <span className="timestamp">
               {new Date(response.timestamp).toLocaleString()}
             </span>
           </div>
           
-          <div className={styles.responseContent}>
+          <div className="responseContent">
             {Object.entries(response.answers).map(([questionId, answer]) => (
-              <div key={questionId} className={styles.answer}>
-                <div className={styles.question}>{answer.question}</div>
-                <div className={styles.answerText}>{answer.value}</div>
+              <div key={questionId} className="answer">
+                <div className="question">{answer.question}</div>
+                <div className="answerText">{answer.value}</div>
               </div>
             ))}
           </div>

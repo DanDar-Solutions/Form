@@ -1,5 +1,5 @@
 import React from 'react';
-import styles from './ConfirmDialog.module.css';
+import './ConfirmDialog.css';
 
 function ConfirmDialog({ 
   isOpen, 
@@ -13,19 +13,19 @@ function ConfirmDialog({
   if (!isOpen) return null;
 
   return (
-    <div className={styles.overlay}>
-      <div className={styles.dialog}>
-        <h3 className={styles.title}>{title}</h3>
-        <p className={styles.message}>{message}</p>
-        <div className={styles.actions}>
+    <div className="overlay">
+      <div className="dialog">
+        <h3 className="title">{title}</h3>
+        <p className="message">{message}</p>
+        <div className="actions">
           <button 
-            className={`${styles.button} ${styles.cancelButton}`} 
+            className="button cancelButton" 
             onClick={onCancel}
           >
             {cancelText}
           </button>
           <button 
-            className={`${styles.button} ${styles.confirmButton}`} 
+            className="button confirmButton" 
             onClick={onConfirm}
           >
             {confirmText}

@@ -2,9 +2,8 @@ import React, { useState } from 'react';
 import styles from './CreateForm.module.css';
 import FormTitle from '../../components/FormTitle/FormTitle';
 import QuestionInput from '../../components/QuestionInput/QuestionInput';
-import LoadingSpinner from '../../components/LoadingSpinner/LoadingSpinner';
-import Notification from '../../components/Notification/Notification';
-import ConfirmDialog from '../../components/ConfirmDialog/ConfirmDialog';
+import Notification from '../../components/ux/Notification/Notification';
+import ConfirmDialog from '../../components/ux/Confirm/ConfirmDialog';
 import {
   DndContext,
   closestCenter,
@@ -288,7 +287,6 @@ function CreateForm() {
           </button>
         </div>
 
-        {isLoading && <LoadingSpinner />}
       </div>
     </div>
   );

@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import styles from './Notification.module.css';
+import './Notification.css';
 
 function Notification({ message, type = 'info', duration = 3000, onClose }) {
   const [visible, setVisible] = useState(true);
@@ -18,9 +18,9 @@ function Notification({ message, type = 'info', duration = 3000, onClose }) {
   if (!message || !visible) return null;
 
   return (
-    <div className={`${styles.notification} ${styles[type]}`}>
-      <div className={styles.message}>{message}</div>
-      <button className={styles.closeButton} onClick={() => setVisible(false)}>
+    <div className={`notification ${type}`}>
+      <div className="message">{message}</div>
+      <button className="closeButton" onClick={() => setVisible(false)}>
         ✕
       </button>
     </div>

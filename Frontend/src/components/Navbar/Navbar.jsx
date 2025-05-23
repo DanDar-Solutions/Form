@@ -1,23 +1,28 @@
-import React from 'react';
 import { Link } from 'react-router-dom';
-import styles from './Navbar.module.css';
+import './Navbar.css';
+import userIcon from '../../public/default user icon.svg';
 
 function Navbar() {
   return (
-    <nav className={styles.navbar}>
-      <div className={styles.logo}>
-        <Link to="/">Form Builder</Link>
+    <nav className="navbar">
+      <div className="logo">
+        <Link to="/">Form clone GANG</Link>
       </div>
-      <ul className={styles.navLinks}>
+      <ul className="navLinks">
         <li>
-          <Link to="/create">Create Form</Link>
+          <Link to="/">Create Form</Link>
         </li>
         <li>
-          <Link to="/forms">My Forms</Link>
+          <Link to="/ViewResponses">Responses</Link>
+        </li>
+        <li>
+          <Link to="/auth">
+            <img src={userIcon} alt="User Icon" className="user-icon" />
+          </Link>
         </li>
       </ul>
     </nav>
   );
 }
 
-export default Navbar; 
+export default Navbar;

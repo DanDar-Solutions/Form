@@ -1,22 +1,22 @@
 import React, { useState } from 'react';
-import styles from './FormTitle.module.css';
+import './FormTitle.css';
 
 function FormTitle({ title, description, onTitleChange, onDescriptionChange }) {
   return (
-    <div className={styles.formTitle}>
+    <div className="formTitle">
       <input
         type="text"
-        className={styles.titleInput}
+        className="titleInput"
         value={title}
-        onChange={(e) => onTitleChange(e.target.value)}
-        placeholder="Form Title"
+        onChange={(e) => onTitleChange(e.target.value)} // changeljaga funcn shuu
+        placeholder="Title"
       />
       <input
         type="text"
-        className={styles.descriptionInput}
+        className="descriptionInput"
         value={description}
-        onChange={(e) => onDescriptionChange(e.target.value)}
-        placeholder="Form Description"
+        onChange={(e) => onDescriptionChange(e.target.value)} // changeljaga funcn shuu
+        placeholder="Description"
       />
     </div>
   );
