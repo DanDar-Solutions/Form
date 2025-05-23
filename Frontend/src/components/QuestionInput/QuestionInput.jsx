@@ -1,12 +1,12 @@
 import React, { useState } from 'react';
 import './QuestionInput.css';
-import Date from './types/dates/Date';
 import Time from './types/dates/Time';
+import Date from './types/dates/Date';
 import MultipleChoiceGrid from './types/choices/MultipleChoiceGrid';
 import Connect from './types/advanced/Connect';
 import Swap from './types/advanced/Swap';
-import ShortAnswer from './types/ShortAnswer';
-import Paragraph from './types/Paragraph';
+import ShortAnswer from './types/inputs/ShortAnswer';
+import Paragraph from './types/inputs/Paragraph';
 import MultipleChoice from './types/choices/MultipleChoice';
 import Checkboxes from './types/choices/Checkboxes';
 import { useSortable } from '@dnd-kit/sortable';
