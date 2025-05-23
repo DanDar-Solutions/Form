@@ -16,8 +16,6 @@ function CreateForm() {
   const [questionToDelete, setQuestionToDelete] = useState(null);
   const [showLeaveConfirm, setShowLeaveConfirm] = useState(false);
 
-  const isFormModified = title !== '' || description !== '' || questions.length > 0;
-
   const addQuestion = () => {
     setQuestions([
       ...questions,
@@ -91,13 +89,6 @@ function CreateForm() {
       setIsLoading(false);
     }
   };
-
-  const handleClearForm = () => {
-    if (isFormModified) {
-      setShowLeaveConfirm(true);
-    }
-  };
-
   const confirmClearForm = () => {
     setTitle('');
     setDescription('');
