@@ -1,16 +1,16 @@
 import React, { useState } from 'react';
 import './QuestionInput.css';
+
+import { useSortable } from '@dnd-kit/sortable';
+import { CSS } from '@dnd-kit/utilities';
+
 import Time from './types/dates/Time';
 import Date from './types/dates/Date';
 import MultipleChoiceGrid from './types/choices/MultipleChoiceGrid';
 import Connect from './types/advanced/Connect';
 import Swap from './types/advanced/Swap';
 import ShortAnswer from './types/inputs/ShortAnswer';
-import Paragraph from './types/inputs/Paragraph';
 import MultipleChoice from './types/choices/MultipleChoice';
-import Checkboxes from './types/choices/Checkboxes';
-import { useSortable } from '@dnd-kit/sortable';
-import { CSS } from '@dnd-kit/utilities';
 
 function QuestionInput({ id, question, onQuestionChange, onDelete, isDragging = false }) {
   const [questionType, setQuestionType] = useState('text');
@@ -60,15 +60,13 @@ function QuestionInput({ id, question, onQuestionChange, onDelete, isDragging = 
           value={questionType}
           onChange={(e) => setQuestionType(e.target.value)}
         >
-          <option value="text">Short Answer</option>
-          <option value="paragraph">Paragraph</option>
           <option value="radio">Multiple Choice</option>
-          <option value="checkbox">Checkboxes</option>
-          <option value="date">Date</option>
-          <option value="time">Time</option>
-          <option value="grid">Multiple Choice Grid</option>
           <option value="connect">Connect</option>
           <option value="swap">Swap</option>
+          <option value="text">Short Answer</option>
+          <option value="grid">Multiple Choice Grid</option>
+          <option value="date">Date</option>
+          <option value="time">Time</option>
         </select>
         
         <button 
@@ -86,22 +84,8 @@ function QuestionInput({ id, question, onQuestionChange, onDelete, isDragging = 
         />
       )}
       
-      {questionType === 'paragraph' && (
-        <Paragraph 
-          onChange={(value) => onQuestionChange({ ...question, paragraphValue: value })}
-          value={question.paragraphValue}
-        />
-      )}
-      
       {questionType === 'radio' && (
         <MultipleChoice 
-          options={question.options || []}
-          onChange={(options) => onQuestionChange({ ...question, options })}
-        />
-      )}
-      
-      {questionType === 'checkbox' && (
-        <Checkboxes 
           options={question.options || []}
           onChange={(options) => onQuestionChange({ ...question, options })}
         />
