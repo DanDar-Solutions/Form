@@ -18,15 +18,14 @@ export default function ShortAnswer({ value = '', onChange }) {
 
   return (
     <div className="shortAnswerWrapper">
-      <p className="shortAnswerHint">Users will be able to enter a short text response</p>
+      <p className="shortAnswerHint">Users will be able to enter a text response</p>
       <div className="shortAnswerPreview">
         <input
           type="text"
           className="shortAnswerInput"
-          placeholder="Short text answer"
+          placeholder="Text answer"
           value={text}
           onChange={handleChange}
-          disabled
         />
       </div>
     </div>
