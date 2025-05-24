@@ -3,12 +3,11 @@ import dotenv from "dotenv";
 import cors from "cors";
 
 import { connectDB } from "./config/db.js";
-
+import router from "./routes/routes.js";
 
 
 dotenv.config();
 const app = express();
-
 
 
 const corsOptions = {
@@ -17,9 +16,18 @@ const corsOptions = {
 app.use(cors(corsOptions));
 
 
-
 const port = process.env.PORT || 8800;
 app.use(express.json());
+
+
+app.get("/", (req, res) => {
+  res.send("Welcome to the Server");
+});
+
+app.get("/api", (req, res) => {
+  res.send("Welcome to the API");
+});
+app.use("/api", router);
 
 
 app.listen(port, () => {
