@@ -34,10 +34,10 @@ const getUser = async (req,res) =>{
 
 //  create new user
 const createUser = async (req,res) =>{
-    const {name ,password} = req.body
+    const {name ,email ,password} = req.body
 
     try{
-        const user = await User.create({name,password})
+        const user = await User.create({name,email,password})
         res.status(200).json(user)
     }catch(error){
         res.status(400).json({error:error.message})
@@ -86,9 +86,9 @@ const updateUser = async (req, res) => {
 
 // Login user
 const loginUser = async (req, res) => {
-  const { name, password } = req.body;
+  const { email, password } = req.body;
   try {
-    const user = await User.findOne({ name, password });
+    const user = await User.findOne({ email, password });
     if (!user) {
       return res.status(401).json({ message: 'Invalid credentials' });
     }
@@ -97,8 +97,6 @@ const loginUser = async (req, res) => {
     res.status(500).json({ error: error.message });
   }
 };
-
-// export
 
 export { createUser, allUsers, getUser, deleteUser, updateUser, loginUser };
  
