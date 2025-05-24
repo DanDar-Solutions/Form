@@ -19,11 +19,12 @@ export default function Login() {
     async function handleSubmit(e) {
         e.preventDefault()
         let response = await verifyUser(user)
+        console.log(response)
         if (response) {
             sessionStorage.setItem("User", response)
             console.log(`Bearer ${response}`)
             axios.defaults.headers.common["Authorization"] = `Bearer ${response}`
-            navigate("/home")
+            navigate("/create")
         } else {
             alert("Login failed")
         }
