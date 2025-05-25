@@ -2,9 +2,11 @@ import { verifyUser } from "../../../api.js"
 import { useState } from "react"
 import { useNavigate } from "react-router-dom"
 import axios from "axios"
+import Forgotpassword from "./forgotpassword.jsx"
 
 export default function Login() {
 
+    const [forgotPassword, setForgotPassword] = useState(false)
     const [user, setUser] = useState({
         email: "",
         password: ""
@@ -25,16 +27,24 @@ export default function Login() {
             console.log(`Bearer ${response}`)
             axios.defaults.headers.common["Authorization"] = `Bearer ${response}`
             navigate("/create")
+            // add more
         } else {
             alert("Login failed")
+            // add more
         }
     }
 
     return (
-        <form onSubmit={handleSubmit} className="flex flex-col">
-            <input placeholder={"Email"} onChange={handleChange} name="email" required maxLength={40} className="mb-2"/>
-            <input placeholder={"Password"} onChange={handleChange} name="password" type="password" required maxLength={20} className="mb-2"/>
-            <button type="submit" className="mb-4">Login</button>
-        </form>
+        <div>
+            { !forgotPassword &&
+            <form onSubmit={handleSubmit} className="flex flex-col">
+                <input placeholder={"Email"} onChange={handleChange} name="email" required maxLength={40} className="mb-2"/>
+                <input placeholder={"Password"} onChange={handleChange} name="password" type="password" required maxLength={20} className="mb-2"/>
+                <button type="submit" className="mb-4">Login</button>
+                <button onClick={()=> setForgotPassword(true)} className="mb-4">Forgot Password</button>
+            </form>
+}
+{forgotPassword && <Forgotpassword/>}
+        </div>
     )
 }

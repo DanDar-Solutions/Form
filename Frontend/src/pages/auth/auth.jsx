@@ -1,43 +1,21 @@
-import React from 'react';
 import styles from './auth.module.css';
 import axios from 'axios';
-import { useNavigate } from 'react-router-dom';
 import { useState, useEffect } from 'react';
-import { createUser } from '../../api.js';
+import Account from "./auths/account.jsx"
 
 import CreateAccount  from "./auths/createAccount.jsx";
 import Login  from "./auths/login.jsx";
 
 
 export default function Auth() {
-  const [user, setUser] = useState({ name: "", password: "" });
   const [login, setLogin] = useState(false); // false = register, true = login
+  const [logged, setLogged] = useState(false)
 
-  function handleChange(e) {
-    setUser({ ...user, [e.target.name]: e.target.value });
-  }
-
-  async function handleSubmit(e) {
-    e.preventDefault(); // prevent default form refresh
-    let response = await createUser(user);
-    if (response.status === 200) {
-      console.log("User created successfully");
-    } else {
-      console.log("Error creating user");
-    }
-  }
-  async function handleLogin(e) {
-    e.preventDefault(); // prevent default form refresh
-    let response = await axios.post("http://localhost:3000/api/login", user);
-    if (response.status === 200) {
-      console.log("User logged in successfully");
-      localStorage.setItem("user", JSON.stringify(response.data));
-      navigate("/home");
-    } else {
-      console.log("Error logging in user");
-    }
-  }
-
+  if (logged){
+    return(
+      <Account/>
+    )
+  }else{
   return (
     <div className={styles["auth"]}> 
       {login ? (<CreateAccount/>) : (<Login/>)}
@@ -49,4 +27,5 @@ export default function Auth() {
       </button>
     </div>
   );
+}
 }

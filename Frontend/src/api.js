@@ -25,6 +25,16 @@ export async function updateUser(id, user) {
     return response
 }
 
+export async function sendVerificationCode(email) {
+    const response = await axios.post(`${URL}/api/auth/send-code`, { email });
+    return response;
+}
+
+export async function verifyCode(email, code) {
+    const response = await axios.post(`${URL}/api/auth/verify-code`, { email, code });
+    return response;
+}
+
 export async function verifyUser(user) {
     const response = await axios.post(`${URL}/user/login`, user)
     console.log(response)
