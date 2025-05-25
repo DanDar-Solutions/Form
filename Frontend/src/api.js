@@ -14,14 +14,12 @@ export async function getUser(id) {
 }
 
 export async function createUser(user) {
-    //"http://localhost:3000/users"
-    const response = await axios.post(`${URL}/users`, user)
+    const response = await axios.post(`${URL}/api/users/users`, user)
     return response
 }
 
 export async function updateUser(id, user) {
-    //"http://localhost:3000/users/12345"
-    const response = await axios.put(`${URL}/users/${id}`, user)
+    const response = await axios.put(`${URL}/api/users/users/${id}`, user)
     return response
 }
 
@@ -36,7 +34,7 @@ export async function verifyCode(email, code) {
 }
 
 export async function verifyUser(user) {
-    const response = await axios.post(`${URL}/user/login`, user)
+    const response = await axios.post(`${URL}/api/users/user/login`, user)
     console.log(response)
     if (response.data.success) {
         return response.data.token

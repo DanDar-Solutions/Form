@@ -1,5 +1,6 @@
 import React, { useState } from 'react';
 import styles from './CreateForm.module.css';
+import { useNavigate } from "react-router-dom";
 
 import FormTitle from '../../components/FormTitle/FormTitle';
 import Notification from '../../components/ux/Notification/Notification';
@@ -15,6 +16,15 @@ function CreateForm() {
   const [showDeleteConfirm, setShowDeleteConfirm] = useState(false);
   const [questionToDelete, setQuestionToDelete] = useState(null);
   const [showLeaveConfirm, setShowLeaveConfirm] = useState(false);
+  const [logged, setLogged] = useState(false); // asuudaltai
+  const navigate = useNavigate();
+
+  const authCheck = () => {
+    console.log(logged)
+    if (!logged) {
+      navigate("/auth");  // just call it directly
+    }
+  };
 
   const addQuestion = () => {
     setQuestions([
@@ -98,7 +108,7 @@ function CreateForm() {
       message: 'Form cleared',
       type: 'info'
     });
-  };
+  };    
 
   return (
     <div className={styles.container}>
@@ -165,11 +175,15 @@ function CreateForm() {
 
           <button 
             className={styles.saveButton} 
-            onClick={handleSaveForm}
+            onClick={() => {
+              handleSaveForm();
+              authCheck();
+            }}
             disabled={isLoading}
           >
             {isLoading ? 'Saving...' : 'Save Form'}
           </button>
+
         </div>
 
       </div>
