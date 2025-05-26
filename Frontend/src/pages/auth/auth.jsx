@@ -7,25 +7,23 @@ import CreateAccount  from "./auths/createAccount.jsx";
 import Login  from "./auths/login.jsx";
 
 
-export default function Auth() {
-  const [login, setLogin] = useState(false); // false = register, true = login
-  const [logged, setLogged] = useState(false)
+export default function Auth({ setLogged, logged }) {
+  const [login, setLogin] = useState(false);
 
-  if (logged){
-    return(
-      <Account/>
-    )
-  }else{
+  if (logged) {
+    return <Account />;
+  }
+
   return (
     <div className={styles["auth"]}> 
-      {login ? (<CreateAccount/>) : (<Login setLogged={setLogged} />)}
+      {login ? <CreateAccount /> : <Login setLogged={setLogged} />}
       <button
         onClick={() => setLogin(!login)}
         className={styles["auth-button"]}
-        style={{ backgroundColor: "#eee", color: "#333", marginTop: "1rem" }}>
+        style={{ backgroundColor: "#eee", color: "#333", marginTop: "1rem" }}
+      >
         {login ? "Need an account? Register" : "Already have an account? Login"}
       </button>
     </div>
   );
-}
 }

@@ -7,7 +7,7 @@ import Notification from '../../components/ux/Notification/Notification';
 import ConfirmDialog from '../../components/ux/Confirm/ConfirmDialog';
 import QuestionInput from '../../components/QuestionInput/QuestionInput';
 
-function CreateForm() {
+function CreateForm(logged) {
   const [title, setTitle] = useState('');
   const [description, setDescription] = useState('');
   const [questions, setQuestions] = useState([]);
@@ -16,7 +16,6 @@ function CreateForm() {
   const [showDeleteConfirm, setShowDeleteConfirm] = useState(false);
   const [questionToDelete, setQuestionToDelete] = useState(null);
   const [showLeaveConfirm, setShowLeaveConfirm] = useState(false);
-  const [logged, setLogged] = useState(false); // asuudaltai
   const navigate = useNavigate();
 
   const authCheck = () => {

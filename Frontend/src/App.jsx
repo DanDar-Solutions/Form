@@ -5,12 +5,16 @@ import ViewResponses from './pages/ViewResponses/ViewResponses';
 import './index.css';
 import Auth from './pages/auth/auth';
 
-import { useEffect } from "react";
+
+import { useEffect, useState } from "react";
 import { gsap } from "gsap";
 import { ScrollTrigger } from "gsap/ScrollTrigger";
 import { ScrollSmoother } from "gsap/ScrollSmoother";
 
 function App() {
+    const [logged, setLogged] = useState(false)
+    
+
 
     useEffect(() => {
     gsap.registerPlugin(ScrollTrigger, ScrollSmoother);
@@ -30,10 +34,10 @@ function App() {
           <Navbar />
           <main>
             <Routes>
-              <Route path="/" element={<CreateForm />} />
+              <Route path="/" element={<CreateForm logged={logged}/>} />
               <Route path="/create" element={<CreateForm />} />
               <Route path="/responses/:formId" element={<ViewResponses />} />
-              <Route path="/auth" element={<Auth />} />
+              <Route path="/auth" element={<Auth setLogged={setLogged} logged={logged} />} />
             </Routes>
           </main>
         </div>

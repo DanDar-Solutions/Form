@@ -1,6 +1,5 @@
 import { verifyUser } from "../../../api.js"
 import { useState } from "react"
-import { useNavigate } from "react-router-dom"
 import axios from "axios"
 import Forgotpassword from "./forgotpassword.jsx"
 
@@ -11,8 +10,6 @@ export default function Login({ setLogged }) {
         email: "",
         password: ""
     })
-
-    const navigate = useNavigate()
 
     function handleChange(e) {
         setUser({ ...user, [e.target.name]: e.target.value })
