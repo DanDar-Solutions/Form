@@ -18,7 +18,7 @@ export default function Auth() {
   }else{
   return (
     <div className={styles["auth"]}> 
-      {login ? (<CreateAccount/>) : (<Login/>)}
+      {login ? (<CreateAccount/>) : (<Login setLogged={setLogged} />)}
       <button
         onClick={() => setLogin(!login)}
         className={styles["auth-button"]}

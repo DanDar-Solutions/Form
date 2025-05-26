@@ -4,7 +4,7 @@ import { useNavigate } from "react-router-dom"
 import axios from "axios"
 import Forgotpassword from "./forgotpassword.jsx"
 
-export default function Login() {
+export default function Login({ setLogged }) {
 
     const [forgotPassword, setForgotPassword] = useState(false)
     const [user, setUser] = useState({
@@ -23,14 +23,11 @@ export default function Login() {
         let response = await verifyUser(user)
         console.log(response)
         if (response) {
-            sessionStorage.setItem("User", response)
-            console.log(`Bearer ${response}`)
-            axios.defaults.headers.common["Authorization"] = `Bearer ${response}`
-            navigate("/create")
-            // add more
+        sessionStorage.setItem("User", response)
+        axios.defaults.headers.common["Authorization"] = `Bearer ${response}`
+        setLogged(true)  // ✅ update parent state!
         } else {
-            alert("Login failed")
-            // add more
+        alert("Login failed")
         }
     }
 
@@ -40,11 +37,11 @@ export default function Login() {
             <form onSubmit={handleSubmit} className="flex flex-col">
                 <input placeholder={"Email"} onChange={handleChange} name="email" required maxLength={40} className="mb-2"/>
                 <input placeholder={"Password"} onChange={handleChange} name="password" type="password" required maxLength={20} className="mb-2"/>
-                <button type="submit" className="mb-4">Login</button>
+                <button type="submit" className="mb-4" >Login</button>
                 <button onClick={()=> setForgotPassword(true)} className="mb-4">Forgot Password</button>
             </form>
 }
-{forgotPassword && <Forgotpassword/>}
+            {forgotPassword && <Forgotpassword/>}
         </div>
     )
 }
