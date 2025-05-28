@@ -1,5 +1,4 @@
 import styles from './auth.module.css';
-import axios from 'axios';
 import { useState, useEffect } from 'react';
 import Account from "./auths/account.jsx"
 
@@ -10,12 +9,19 @@ import Login  from "./auths/login.jsx";
 export default function Auth({ setLogged, logged }) {
   const [login, setLogin] = useState(false);
 
+  useEffect(() => {
+    const isLogged = localStorage.getItem("logged") === "true";
+    if (isLogged) {
+      setLogged(true); // localStorage дээр хадгалагдсан утгаар сэргээж байна
+    }
+  }, [setLogged]);
+
   if (logged) {
     return <Account />;
   }
 
   return (
-    <div className={styles["auth"]}> 
+    <div className={styles["auth"]}>
       {login ? <CreateAccount /> : <Login setLogged={setLogged} />}
       <button
         onClick={() => setLogin(!login)}

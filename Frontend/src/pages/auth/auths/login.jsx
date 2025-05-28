@@ -16,17 +16,20 @@ export default function Login({ setLogged }) {
     }
 
     async function handleSubmit(e) {
-        e.preventDefault()
-        let response = await verifyUser(user)
-        console.log(response)
+        e.preventDefault();
+        let response = await verifyUser(user);
+        console.log(response);
+
         if (response) {
-        sessionStorage.setItem("User", response)
-        axios.defaults.headers.common["Authorization"] = `Bearer ${response}`
-        setLogged(true)  // ✅ update parent state!
+            sessionStorage.setItem("User", response);
+            axios.defaults.headers.common["Authorization"] = `Bearer ${response}`;
+            setLogged(true); //  state
+            localStorage.setItem("logged", "true"); //  persistent login
         } else {
-        alert("Login failed")
+            alert("Login failed");
         }
-    }
+    }   
+
 
     return (
         <div>
