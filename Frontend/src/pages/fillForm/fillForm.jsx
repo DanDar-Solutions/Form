@@ -9,7 +9,7 @@ import Rtype5 from './types/Rtype5';
 import Rtype6 from './types/Rtype6';
 import Rtype7 from './types/Rtype7';
 
-export default function ViewForm() {
+export default function fillForm() {
   const [data, setData] = useState({ forms: {} });
 
   useEffect(() => {

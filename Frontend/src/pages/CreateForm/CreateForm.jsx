@@ -1,6 +1,6 @@
 import { useState } from 'react';
 import styles from './CreateForm.module.css';
-import { useNavigate, useLocation } from "react-router-dom";
+import { useNavigate } from "react-router-dom";
 
 import FormTitle from '../../components/FormTitle/FormTitle';
 import Notification from '../../components/ux/Notification/Notification';
@@ -19,10 +19,8 @@ function CreateForm({logged}) {
   const [showLeaveConfirm, setShowLeaveConfirm] = useState(false);
   const [isLoading, setIsLoading] = useState(false);
   const navigate = useNavigate();
-  const location = useLocation();
   
   const authCheck = () => {
-    console.log(logged)
     if (!logged) {
       navigate("/auth");  // just call it directly
     }
@@ -62,7 +60,6 @@ function CreateForm({logged}) {
   ////////////////////// //////////////////////  //////////////////////  //////////////////////  //////////////////////  //////////////////////
     const handleSaveForm = async () => {
       const storedUser = sessionStorage.getItem("User");
-      console.log("form:",questions);
       
       if (!storedUser) {
         console.log("User not found in sessionStorage");
@@ -76,9 +73,6 @@ function CreateForm({logged}) {
         console.log("User ID is missing");
         return;
       }
-
-      console.log("User ID:", userId);
-      console.log("User data:", user);
 
       // title baina uu?
       if (!title.trim()) {

@@ -5,7 +5,7 @@ import Navbar from './components/Navbar/Navbar';
 import CreateForm from './pages/CreateForm/CreateForm';
 import ViewResponses from './pages/ViewResponses/ViewResponses';
 import Auth from './pages/auth/auth';
-import ViewForm from "./pages/ViewResponses/ViewResponses"
+import ViewForm from "./pages/fillForm/fillForm"
 
 import { useEffect, useState } from "react";
 import { gsap } from "gsap";
@@ -39,8 +39,7 @@ function App() {
               <Route path="/create" element={<CreateForm logged={logged}/>} />
               <Route path="/responses/:formId" element={<ViewResponses />} />
               <Route path="/auth" element={<Auth setLogged={setLogged} logged={logged} />} />
-              <Route path="/res" element={<ViewForm />} />
-
+              <Route path="/fill" element={<ViewForm />} />
             </Routes>
           </main>
         </div>

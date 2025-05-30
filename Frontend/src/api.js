@@ -39,8 +39,8 @@ export async function verifyCode(email, code) {
 
 export async function verifyUser(user) {
     console.log("Sending user data to backend:", user);
-    const response = await axios.post(`${URL}/api/auth/login`, user)
     console.log(response)
+    const response = await axios.post(`${URL}/api/auth/login`, user)
     if (response.data.success) {
         return response
     } else {
