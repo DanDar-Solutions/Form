@@ -1,5 +1,6 @@
 import { useState, useEffect } from 'react';
 import axios from 'axios';
+import meme from '../../public/meme.webp';
 
 import Connect from './types/Connect';
 import Date from './types/Date';
@@ -28,6 +29,10 @@ export default function fillForm() {
   return (
     <div>
       <h2>ViewForm</h2>
+
+      <img src={meme} alt="meme" />
+      <h1>aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa</h1>
+
       {Object.entries(data.forms).map(([formName, type], index) => (
         <div key={index}>
           <strong>{formName}</strong>: {type}
