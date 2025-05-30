@@ -3,7 +3,7 @@ import { useState } from "react"
 import axios from "axios"
 import Forgotpassword from "./forgotpassword.jsx"
 
-export default function Login({ setLogged }) {
+export default function Login({ setLogged, setNotification }) {
 
     const [forgotPassword, setForgotPassword] = useState(false)
     const [user, setUser] = useState({
@@ -17,19 +17,33 @@ export default function Login({ setLogged }) {
 
     async function handleSubmit(e) {
         e.preventDefault();
-        let response = await verifyUser(user);
-        console.log(response);
-        
+        try {
+            let response = await verifyUser(user);
+            console.log(response);
+            
 
-        if (response) {
-            sessionStorage.setItem("User", JSON.stringify({
-                id: response.data.id,   // '68383ba5ebb6b73ee351562a'
-                name: response.data.name // 'admin123'
-            }));
-            setLogged(true); //  state
-            localStorage.setItem("logged", "true"); //  persistent login
-        } else {
-            alert("Login failed");
+            if (response) {
+                sessionStorage.setItem("User", JSON.stringify({
+                    id: response.data.id,   // '68383ba5ebb6b73ee351562a'
+                    name: response.data.name // 'admin123'
+                }));
+                setLogged(true); //  state
+                localStorage.setItem("logged", "true"); //  persistent login
+                setNotification({
+                    message: "Амжилттай нэвтэрлээ",
+                    type: "success"
+                });
+            } else {
+                setNotification({
+                    message: "Нэвтрэх нэр эсвэл нууц үг буруу байна",
+                    type: "error"
+                });
+            }
+        } catch (error) {
+            setNotification({
+                message: "Серверт холбогдоход алдаа гарлаа",
+                type: "error"
+            });
         }
     }   
 
@@ -44,7 +58,7 @@ export default function Login({ setLogged }) {
                 <button type="button" onClick={()=> setForgotPassword(true)} className="mb-4">Forgot Password</button>
             </form>
 }
-            {forgotPassword && <Forgotpassword/>}
+            {forgotPassword && <Forgotpassword setNotification={setNotification}/>}
         </div>
     )
 }

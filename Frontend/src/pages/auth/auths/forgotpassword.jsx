@@ -1,27 +1,41 @@
 import React, { useState } from "react";
 import axios from "axios";
 
-export default function ForgotPassword() {
+export default function ForgotPassword({ setNotification }) {
   const [email, setEmail] = useState("");
   const [codeSent, setCodeSent] = useState(false);
   const [code, setCode] = useState("");
-  const [message, setMessage] = useState("");
 
   // Имэйл рүү код илгээх
   const handleSendCode = async () => {
-    if (!email.includes("@")) return alert("Email зөв оруулна уу");
+    if (!email.includes("@")) {
+      setNotification({
+        message: "И-мэйл хаяг буруу байна",
+        type: "error"
+      });
+      return;
+    }
 
     try {
       const res = await axios.post("http://localhost:8000/api/auth/send-code", { email });
       if (res.data.success) {
         setCodeSent(true);
-        setMessage("Код амжилттай илгээгдлээ. Имэйлээ шалгаарай.");
+        setNotification({
+          message: "Код амжилттай илгээгдлээ. Имэйлээ шалгаарай.",
+          type: "success"
+        });
       } else {
-        setMessage("Код илгээхэд алдаа гарлаа.");
+        setNotification({
+          message: "Код илгээхэд алдаа гарлаа",
+          type: "error"
+        });
       }
     } catch (err) {
       console.error(err);
-      setMessage("Сервертэй холбогдохдоо алдаа гарлаа.");
+      setNotification({
+        message: "Сервертэй холбогдоход алдаа гарлаа",
+        type: "error"
+      });
     }
   };
 
@@ -34,14 +48,23 @@ export default function ForgotPassword() {
       });
 
       if (res.data.success) {
-        setMessage("Код зөв байна. Одоо нууц үгээ шинэчилнэ үү.");
+        setNotification({
+          message: "Код зөв байна. Одоо нууц үгээ шинэчилнэ үү.",
+          type: "success"
+        });
         // Энд нууц үг солих хуудас руу navigate хийж болно
       } else {
-        setMessage("Код буруу байна.");
+        setNotification({
+          message: "Код буруу байна",
+          type: "error"
+        });
       }
     } catch (err) {
       console.error(err);
-      setMessage("Сервертэй холбогдохдоо алдаа гарлаа.");
+      setNotification({
+        message: "Сервертэй холбогдоход алдаа гарлаа",
+        type: "error"
+      });
     }
   };
 
@@ -78,8 +101,6 @@ export default function ForgotPassword() {
           </button>
         </>
       )}
-
-      {message && <p className="mt-2 text-sm">{message}</p>}
     </div>
   );
 }

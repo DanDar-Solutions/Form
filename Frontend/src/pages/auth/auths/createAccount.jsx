@@ -3,7 +3,7 @@ import { createUser } from "../../../api.js"
 import { useState } from "react"
 import { useNavigate } from "react-router-dom"
 
-export default function CreateAccount() {
+export default function CreateAccount({ setNotification }) {
   const [logged, setLogged] = useState(false)
   const [user, setUser] = useState({
     name: "",
@@ -23,14 +23,24 @@ export default function CreateAccount() {
       
       if (response && response._id) {
         setLogged(true)
-        navigate("/create", { state: { userId: response._id } })  // userId
+        setNotification({
+          message: "Бүртгэл амжилттай үүслээ",
+          type: "success"
+        });
+        navigate("/create", { state: { userId: response._id } })
       } else {
-        alert("User account could not be created :(")
+        setNotification({
+          message: "Бүртгэл үүсгэж чадсангүй",
+          type: "error"
+        });
       }
 
       console.log(response)
     } catch (error) {
-      alert("User account could not be created :(")
+      setNotification({
+        message: "Бүртгэл үүсгэх үед алдаа гарлаа",
+        type: "error"
+      });
       console.error(error)
     }
   }

@@ -1,13 +1,16 @@
 import styles from './auth.module.css';
 import { useState, useEffect } from 'react';
 import Account from "./auths/account.jsx"
-
 import CreateAccount  from "./auths/createAccount.jsx";
 import Login  from "./auths/login.jsx";
-
+import Notification from '../../components/ux/Notification/Notification';
 
 export default function Auth({ setLogged, logged }) {
   const [login, setLogin] = useState(false);
+  const [notification, setNotification] = useState({
+    message: '',
+    type: 'info'
+  });
 
   useEffect(() => {
     const isLogged = localStorage.getItem("logged") === "true";
@@ -22,7 +25,18 @@ export default function Auth({ setLogged, logged }) {
 
   return (
     <div className={styles["auth"]}>
-      {login ? <CreateAccount /> : <Login setLogged={setLogged} />}
+      {notification.message && (
+        <Notification
+          message={notification.message}
+          type={notification.type}
+          onClose={() => setNotification({ message: '', type: 'info' })}
+        />
+      )}
+      {login ? (
+        <CreateAccount setNotification={setNotification} />
+      ) : (
+        <Login setLogged={setLogged} setNotification={setNotification} />
+      )}
       <button
         onClick={() => setLogin(!login)}
         className={styles["auth-button"]}
