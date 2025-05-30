@@ -1,13 +1,13 @@
 import { useState, useEffect } from 'react';
 import axios from 'axios';
 
-import Rtype1 from './types/rtype1';
-import Rtype2 from './types/Rtype2';
-import Rtype3 from './types/Rtype3';
-import Rtype4 from './types/Rtype4';
-import Rtype5 from './types/Rtype5';
-import Rtype6 from './types/Rtype6';
-import Rtype7 from './types/Rtype7';
+import Connect from './types/Connect';
+import Date from './types/Date';
+import MultipleChoice from './types/MultipleChoice';
+import MultipleChoiceGrid from './types/MultipleChoiceGrid';
+import Swap from './types/Swap';
+import TextAnswer from './types/TextAnswer';
+import Time from './types/Time';
 
 export default function fillForm() {
   const [data, setData] = useState({ forms: {} });
@@ -31,13 +31,13 @@ export default function fillForm() {
       {Object.entries(data.forms).map(([formName, type], index) => (
         <div key={index}>
           <strong>{formName}</strong>: {type}
-          {type === "type1" && <Rtype1 />}
-          {type === "type2" && <Rtype2 />}
-          {type === "type3" && <Rtype3 />}
-          {type === "type4" && <Rtype4 />}
-          {type === "type5" && <Rtype5 />}
-          {type === "type6" && <Rtype6 />}
-          {type === "type7" && <Rtype7 />}
+          {type === "type1" && <Connect />}
+          {type === "type2" && <Date />}
+          {type === "type3" && <MultipleChoice />}
+          {type === "type4" && <MultipleChoiceGrid />}
+          {type === "type5" && <Swap />}
+          {type === "type6" && <TextAnswer />}
+          {type === "type7" && <Time />}
         </div>
       ))}
     </div>

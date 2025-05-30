@@ -16,6 +16,9 @@ function Navbar() {
           <Link to="/ViewResponses">Responses</Link>
         </li>
         <li>
+          <Link to="/fill">fill</Link>
+        </li>
+        <li>
           <Link to="/auth">
             <img src={userIcon} alt="User Icon" className="user-icon" />
           </Link>
