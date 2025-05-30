@@ -33,16 +33,26 @@ const getUser = async (req,res) =>{
 
 
 //  create new user
-const createUser = async (req,res) =>{
-    const {name ,email ,password} = req.body
+const createUser = async (req, res) => {
+  const { name, email, password } = req.body;
 
-    try{
-        const user = await User.create({name,email,password})
-        res.status(200).json(user)
-    }catch(error){
-        res.status(400).json({error:error.message})
+  try {
+    // if there is email. if already signed up
+    const existingUser = await User.findOne({ email });
+    if (existingUser) {
+      return res.status(400).json({ message: "Email аль хэдийн бүртгэгдсэн байна" });
     }
-}
+
+    // createUser
+    const user = await User.create({ name, email, password });
+
+    // return user_id
+    res.status(200).json({ userId: user._id, message: "User created successfully" });
+  } catch (error) {
+    res.status(400).json({ error: error.message });
+  }
+};
+
 
 //  delete new user
 const deleteUser = async (req, res) => {
@@ -84,19 +94,7 @@ const updateUser = async (req, res) => {
   }
 };
 
-// Login user
-const loginUser = async (req, res) => {
-  const { email, password } = req.body;
-  try {
-    const user = await User.findOne({ email, password });
-    if (!user) {
-      return res.status(401).json({ message: 'Invalid credentials' });
-    }
-    res.status(200).json({ message: 'Login successful', success: true, token: 'placeholder_token', name: user.name, id: user._id });
-  } catch (error) {
-    res.status(500).json({ error: error.message });
-  }
-};
 
-export { createUser, allUsers, getUser, deleteUser, updateUser, loginUser };
+
+export { createUser, allUsers, getUser, deleteUser, updateUser,  };
  

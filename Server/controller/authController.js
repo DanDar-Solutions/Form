@@ -1,4 +1,7 @@
 import { sendEmail } from "../utils/sendEmail.js"
+import User from "../models/user.model.js";
+import mongoose from "mongoose";
+
 
 let verificationCodes = {}
 
@@ -37,3 +40,16 @@ export const verifyCode = (req, res) => {
   delete verificationCodes[email]
   res.json({ success: true, message: "Code verified." })
 }
+// Login user
+export const loginUser = async (req, res) => {
+  const { email, password } = req.body;
+  try {
+    const user = await User.findOne({ email, password });
+    if (!user) {
+      return res.status(401).json({ message: 'Invalid credentials' });
+    }
+    res.status(200).json({ message: 'Login successful', success: true, token: 'placeholder_token', name: user.name, id: user._id });
+  } catch (error) {
+    res.status(500).json({ error: error.message });
+  }
+};

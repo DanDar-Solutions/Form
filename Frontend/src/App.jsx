@@ -36,7 +36,7 @@ function App() {
           <main>
             <Routes>
               <Route path="/" element={<CreateForm logged={logged}/>} />
-              <Route path="/create" element={<CreateForm />} />
+              <Route path="/create" element={<CreateForm logged={logged}/>} />
               <Route path="/responses/:formId" element={<ViewResponses />} />
               <Route path="/auth" element={<Auth setLogged={setLogged} logged={logged} />} />
               <Route path="/res" element={<ViewForm />} />

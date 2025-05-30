@@ -13,7 +13,7 @@ import ShortAnswer from './types/inputs/ShortAnswer';
 import MultipleChoice from './types/choices/MultipleChoice';
 
 function QuestionInput({ id, question, onQuestionChange, onDelete, isDragging = false }) {
-  const [questionType, setQuestionType] = useState('text');
+  const questionType = question.type || 'text';
   
   const {
     attributes,
@@ -58,7 +58,7 @@ function QuestionInput({ id, question, onQuestionChange, onDelete, isDragging = 
         <select 
           className="typeSelect"
           value={questionType}
-          onChange={(e) => setQuestionType(e.target.value)}
+          onChange={(e) => onQuestionChange({ ...question, type: e.target.value })}
         >
           <option value="radio">Multiple Choice</option>
           <option value="connect">Connect</option>

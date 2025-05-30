@@ -19,10 +19,13 @@ export default function Login({ setLogged }) {
         e.preventDefault();
         let response = await verifyUser(user);
         console.log(response);
+        
 
         if (response) {
-            sessionStorage.setItem("User", response);
-            axios.defaults.headers.common["Authorization"] = `Bearer ${response}`;
+            sessionStorage.setItem("User", JSON.stringify({
+                id: res.data.id,   // '68383ba5ebb6b73ee351562a'
+                name: res.data.name // 'admin123'
+            }));
             setLogged(true); //  state
             localStorage.setItem("logged", "true"); //  persistent login
         } else {
@@ -38,7 +41,7 @@ export default function Login({ setLogged }) {
                 <input placeholder={"Email"} onChange={handleChange} name="email" required maxLength={40} className="mb-2"/>
                 <input placeholder={"Password"} onChange={handleChange} name="password" type="password" required maxLength={20} className="mb-2"/>
                 <button type="submit" className="mb-4" >Login</button>
-                <button onClick={()=> setForgotPassword(true)} className="mb-4">Forgot Password</button>
+                <button type="button" onClick={()=> setForgotPassword(true)} className="mb-4">Forgot Password</button>
             </form>
 }
             {forgotPassword && <Forgotpassword/>}

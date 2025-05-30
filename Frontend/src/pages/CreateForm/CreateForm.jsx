@@ -1,23 +1,26 @@
-import React, { useState } from 'react';
+import { useState } from 'react';
 import styles from './CreateForm.module.css';
-import { useNavigate } from "react-router-dom";
+import { useNavigate, useLocation } from "react-router-dom";
 
 import FormTitle from '../../components/FormTitle/FormTitle';
 import Notification from '../../components/ux/Notification/Notification';
 import ConfirmDialog from '../../components/ux/Confirm/ConfirmDialog';
 import QuestionInput from '../../components/QuestionInput/QuestionInput';
 
-function CreateForm(logged) {
+import {saveForm} from "../../api"
+
+function CreateForm({logged}) {
   const [title, setTitle] = useState('');
   const [description, setDescription] = useState('');
   const [questions, setQuestions] = useState([]);
-  const [isLoading, setIsLoading] = useState(false);
   const [notification, setNotification] = useState({ message: '', type: '' });
   const [showDeleteConfirm, setShowDeleteConfirm] = useState(false);
   const [questionToDelete, setQuestionToDelete] = useState(null);
   const [showLeaveConfirm, setShowLeaveConfirm] = useState(false);
+  const [isLoading, setIsLoading] = useState(false);
   const navigate = useNavigate();
-
+  const location = useLocation();
+  
   const authCheck = () => {
     console.log(logged)
     if (!logged) {
@@ -55,15 +58,38 @@ function CreateForm(logged) {
     }
   };
 
-  const handleSaveForm = async () => {
-    if (!title.trim()) {
-      setNotification({
-        message: 'Please enter a form title',
-        type: 'error'
-      });
-      return;
-    }
 
+  ////////////////////// //////////////////////  //////////////////////  //////////////////////  //////////////////////  //////////////////////
+    const handleSaveForm = async () => {
+      const storedUser = sessionStorage.getItem("User");
+      console.log("form:",questions);
+      
+      if (!storedUser) {
+        console.log("User not found in sessionStorage");
+        return;
+      }
+
+      const user = JSON.parse(storedUser);
+      const userId = user._id || user.id;
+
+      if (!userId) {
+        console.log("User ID is missing");
+        return;
+      }
+
+      console.log("User ID:", userId);
+      console.log("User data:", user);
+
+      // title baina uu?
+      if (!title.trim()) {
+        setNotification({
+          message: 'Please enter a form title',
+          type: 'error'
+        });
+        return;
+      }
+  
+    // if > no question
     if (questions.length === 0) {
       setNotification({
         message: 'Please add at least one question',
@@ -72,6 +98,7 @@ function CreateForm(logged) {
       return;
     }
 
+    // if question is empty
     const invalidQuestions = questions.filter(q => !q.text.trim());
     if (invalidQuestions.length > 0) {
       setNotification({
@@ -81,14 +108,23 @@ function CreateForm(logged) {
       return;
     }
 
+    // data scheme
+    const formData = {
+      title,
+      description,
+      questions,
+    };
+
     setIsLoading(true);
 
     try {
-      await new Promise(resolve => setTimeout(resolve, 1000));
+      await saveForm(userId, formData); // save on server > dataBase
+
       setNotification({
         message: 'Form saved successfully!',
         type: 'success'
       });
+
     } catch (error) {
       setNotification({
         message: 'Error saving form: ' + (error.message || 'Unknown error'),
@@ -98,6 +134,9 @@ function CreateForm(logged) {
       setIsLoading(false);
     }
   };
+  ////////////////////// //////////////////////  //////////////////////  //////////////////////  //////////////////////  //////////////////////
+
+
   const confirmClearForm = () => {
     setTitle('');
     setDescription('');
@@ -152,15 +191,17 @@ function CreateForm(logged) {
         )}
 
         <div>
-          {questions.map(question => (
-            <QuestionInput 
+          {questions.map(question => {
+            return(
+              <QuestionInput 
               key={question.id}
               id={question.id}
               question={question}
               onQuestionChange={(updatedQ) => updateQuestion(question.id, updatedQ)}
               onDelete={() => confirmDeleteQuestion(question.id)}
-            />
-          ))}
+              />
+          
+            )})}
         </div>
         
         <div className={styles.formActions}>
@@ -175,8 +216,8 @@ function CreateForm(logged) {
           <button 
             className={styles.saveButton} 
             onClick={() => {
-              handleSaveForm();
               authCheck();
+              handleSaveForm();
             }}
             disabled={isLoading}
           >
