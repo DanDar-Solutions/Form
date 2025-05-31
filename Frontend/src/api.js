@@ -17,13 +17,13 @@ export async function createUser(userData) {
     const response = await axios.post(`${URL}/api/users`, userData);
     return response.data;  // user_id and messages
   } catch (error) {
-    console.error("User үүсгэхэд алдаа:", error);
+    console.error("User үүсгэхэд алдаа:", error);    // urj bui user ni undefined umu null baihad
     throw error;
   }
 }
 
 export async function updateUser(id, user) {
-    const response = await axios.put(`${URL}/api/users/${id}`, user)
+    const response = await axios.put(`${URL}/api/users/${id}`, user)     // development needed
     return response
 }
 
@@ -52,11 +52,11 @@ export async function saveForm(userId, formData) {
         const response = await axios.post(`${URL}/api/users/${userId}/forms`, formData);
         return response.data;
     } catch (error) {
-        const message = error.response?.data?.message || error.message || 'Тодорхойгүй алдаа';
+        const message = error.response?.data?.message || error.message || 'Тодорхойгүй алдаа'; // undefined ym shig bn 
         console.error("Error while saving:", message);
         throw new Error(message);  // return error instead of null (i think)
     }
 
 
-    
+
 }

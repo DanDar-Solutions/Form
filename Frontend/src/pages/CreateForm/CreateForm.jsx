@@ -62,12 +62,12 @@ function CreateForm({logged}) {
       const storedUser = sessionStorage.getItem("User");
       
       if (!storedUser) {
-        console.log("User not found in sessionStorage");
+        console.log("User not found in sessionStorage",storedUser);  // ene bol auth bug shv (bug1)
         return;
       }
 
       const user = JSON.parse(storedUser);
-      const userId = user._id || user.id;
+      const userId = user._id || user.id;           // ene nileed utagagui um shig bnle
 
       if (!userId) {
         console.log("User ID is missing");
@@ -112,7 +112,7 @@ function CreateForm({logged}) {
     setIsLoading(true);
 
     try {
-      await saveForm(userId, formData); // save on server > dataBase
+      await saveForm(userId, formData); // save on server > dataBase        ((bug2) not working when updating just forced to save to dataBase(...newData) // solution(programm needed by id))
 
       setNotification({
         message: 'Form saved successfully!',
