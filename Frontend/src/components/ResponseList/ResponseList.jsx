@@ -1,7 +1,7 @@
-import React from 'react';
 import './ResponseList.css';
+import React from 'react';
 
-function ResponseList({ responses = [] }) {
+function ResponseList({ responses = [] }) {   //
   if (responses.length === 0) {
     return <div className="noResponses">No responses yet</div>;
   }
