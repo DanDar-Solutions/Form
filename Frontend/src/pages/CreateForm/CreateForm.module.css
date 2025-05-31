@@ -15,11 +15,13 @@
 .dragInstructions {
   display: flex;
   align-items: center;
+  justify-content: center;
   margin-bottom: 1.5rem;
-  padding: 0.8rem;
-  background-color: #f5f8ff;
+  padding: 0.8rem 1.2rem;
+  background-color: #f0f4ff;
   border-radius: 4px;
-  color: #666;
+  border-left: 4px solid #673ab7;
+  color: #444;
   font-size: 0.9rem;
 }
 

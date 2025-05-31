@@ -2,12 +2,17 @@ import { useState } from 'react';                                          // re
 import styles from './CreateForm.module.css';
 import { useNavigate } from "react-router-dom";
 
-import FormTitle from '../../components/FormTitle/FormTitle';                //components that calling
+import FormTitle from '../../components/FormTitle/FormTitle';              //components that calling
 import Notification from '../../components/ux/Notification/Notification';
 import ConfirmDialog from '../../components/ux/Confirm/ConfirmDialog';
 import QuestionInput from '../../components/QuestionInput/QuestionInput';
 
 import {saveForm} from "../../api"                                         // function to request to backend (i guess)
+
+import { DndContext, closestCenter, KeyboardSensor, PointerSensor, useSensor, useSensors } from '@dnd-kit/core';          // DnD kit
+import { arrayMove, SortableContext, sortableKeyboardCoordinates, verticalListSortingStrategy } from '@dnd-kit/sortable'; // DnD kit
+import { restrictToVerticalAxis } from '@dnd-kit/modifiers';                                                              // DnD kit
+import SortableQuestionItem from '../../components/QuestionInput/SortableQuestionItem';
 
 function CreateForm({logged}) {
   const [title, setTitle] = useState('');
@@ -19,6 +24,41 @@ function CreateForm({logged}) {
   const [showLeaveConfirm, setShowLeaveConfirm] = useState(false);
   const [isLoading, setIsLoading] = useState(false);
   const navigate = useNavigate();
+
+
+  //////////////////////////////////////// DnD kit ////////////////////////////////////////
+  const sensors = useSensors(
+    useSensor(PointerSensor, {
+      activationConstraint: {
+        distance: 8,
+      },
+    }),
+    useSensor(KeyboardSensor, {
+      coordinateGetter: sortableKeyboardCoordinates,
+    })
+  );
+  
+  const handleDragEnd = (event) => {
+    const { active, over } = event;
+    
+    if (active.id !== over.id) {
+      setQuestions((items) => {
+        const oldIndex = items.findIndex(item => item.id === active.id);
+        const newIndex = items.findIndex(item => item.id === over.id);
+        
+        const newOrder = arrayMove(items, oldIndex, newIndex);
+        
+        setNotification({
+          message: 'Question order updated',
+          type: 'success',
+          id: Date.now()
+        });
+        
+        return newOrder;
+      });
+    }
+  };
+  //////////////////////////////////////// DnD kit ////////////////////////////////////////
   
   const authCheck = () => {
     if (!logged) {
@@ -188,24 +228,30 @@ function CreateForm({logged}) {
           onDescriptionChange={setDescription}
         />
 
-        {questions.length > 0 && (
-          <div className={styles.dragInstructions}>
-            <p>Questions cannot be reordered without drag & drop.</p>
-          </div>
-        )}
-
         <div>
-          {questions.map(question => {
-            return(
-              <QuestionInput 
-              key={question.id}
-              id={question.id}
-              question={question}
-              onQuestionChange={(updatedQ) => updateQuestion(question.id, updatedQ)}
-              onDelete={() => confirmDeleteQuestion(question.id)}
-              />
-          
-            )})}
+          {questions.length > 0 ? (
+            <DndContext 
+              sensors={sensors}
+              collisionDetection={closestCenter}
+              onDragEnd={handleDragEnd}
+              modifiers={[restrictToVerticalAxis]}
+            >
+              <SortableContext 
+                items={questions.map(q => q.id)}
+                strategy={verticalListSortingStrategy}
+              >
+                {questions.map(question => (
+                  <SortableQuestionItem
+                    key={question.id}
+                    id={question.id}
+                    question={question}
+                    onQuestionChange={(updatedQ) => updateQuestion(question.id, updatedQ)}
+                    onDelete={() => confirmDeleteQuestion(question.id)}
+                  />
+                ))}
+              </SortableContext>
+            </DndContext>
+          ) : null}
         </div>
         
         <div className={styles.formActions}>
