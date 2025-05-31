@@ -30,5 +30,4 @@ function ResponseList({ responses = [] }) {   //
     </div>
   );
 }
-
 export default ResponseList; 
