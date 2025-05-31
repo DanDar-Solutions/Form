@@ -42,4 +42,5 @@ a {
 
 #smooth-content {
   will-change: transform;
+  padding-top: 70px;
 }

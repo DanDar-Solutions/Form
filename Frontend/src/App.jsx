@@ -29,10 +29,11 @@ function App() {
   }, []);
   
   return (
+    <>
+    <Navbar />
     <div id="smooth-wrapper">
       <div id="smooth-content">
         <div className="app">
-          <Navbar />
           <main>
             <Routes>
               <Route path="/" element={<CreateForm logged={logged}/>} />
@@ -45,6 +46,7 @@ function App() {
         </div>
       </div>
     </div>
+    </>
   );
 }
 
