@@ -1,7 +1,8 @@
-import React from 'react'
-import { createUser } from "../../../api.js"
+import React from 'react'                                    // required things
 import { useState } from "react"
 import { useNavigate } from "react-router-dom"
+
+import { createUser } from "../../../api.js"                   // function
 
 export default function CreateAccount({ setNotification }) {
   const [logged, setLogged] = useState(false)

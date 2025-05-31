@@ -1,7 +1,7 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect } from 'react';                              // required things
 import './Notification.css';
 
-function Notification({ message, type = 'info', duration = 3000, onClose }) {
+function Notification({ message, type = 'info', duration = 5000, onClose }) {    // ari! eniigaa position absolute bolgrei        
   const [visible, setVisible] = useState(true);
 
   useEffect(() => {

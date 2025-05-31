@@ -1,8 +1,8 @@
-import { useState, useEffect } from 'react';
+import { useState, useEffect } from 'react';               // required things
 import axios from 'axios';
-import meme from '../../public/meme.webp';
+import meme from '../../public/meme.webp';                  // eniigaa ustgaarai ari
 
-import Connect from './types/Connect';
+import Connect from './types/Connect';                       // components types
 import Date from './types/Date';
 import MultipleChoice from './types/MultipleChoice';
 import MultipleChoiceGrid from './types/MultipleChoiceGrid';
@@ -31,7 +31,7 @@ export default function fillForm() {
       <h2>ViewForm</h2>
 
       <img src={meme} alt="meme" />
-      <h1>aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa</h1>
+      <h1>aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa</h1>  {/* <h1>bbbbbbbbbbbbbbbbbbbbbbbbbb</h1> */}
 
       {Object.entries(data.forms).map(([formName, type], index) => (
         <div key={index}>

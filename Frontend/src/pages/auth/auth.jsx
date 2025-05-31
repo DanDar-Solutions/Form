@@ -1,6 +1,7 @@
-import styles from './auth.module.css';
+import styles from './auth.module.css';                                    // required things
 import { useState, useEffect } from 'react';
-import Account from "./auths/account.jsx"
+
+import Account from "./auths/account.jsx"                                   // components that calling
 import CreateAccount  from "./auths/createAccount.jsx";
 import Login  from "./auths/login.jsx";
 import Notification from '../../components/ux/Notification/Notification';

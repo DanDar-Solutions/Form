@@ -1,13 +1,13 @@
-import { useState } from 'react';
+import { useState } from 'react';                                          // required thing
 import styles from './CreateForm.module.css';
 import { useNavigate } from "react-router-dom";
 
-import FormTitle from '../../components/FormTitle/FormTitle';
+import FormTitle from '../../components/FormTitle/FormTitle';                //components that calling
 import Notification from '../../components/ux/Notification/Notification';
 import ConfirmDialog from '../../components/ux/Confirm/ConfirmDialog';
 import QuestionInput from '../../components/QuestionInput/QuestionInput';
 
-import {saveForm} from "../../api"
+import {saveForm} from "../../api"                                         // function to request to backend (i guess)
 
 function CreateForm({logged}) {
   const [title, setTitle] = useState('');

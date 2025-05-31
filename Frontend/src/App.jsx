@@ -1,16 +1,16 @@
-import { Routes, Route } from 'react-router-dom';
+import { useEffect, useState } from "react";
+import { Routes, Route } from 'react-router-dom';                // required
 import './index.css';
 
-import Navbar from './components/Navbar/Navbar';
+import Navbar from './components/Navbar/Navbar';                 // components that calling
 import CreateForm from './pages/CreateForm/CreateForm';
 import ViewResponses from './pages/ViewResponses/ViewResponses';
 import Auth from './pages/auth/auth';
 import ViewForm from "./pages/fillForm/fillForm"
-
-import { useEffect, useState } from "react";
-import { gsap } from "gsap";
+   
+import { ScrollSmoother } from "gsap/ScrollSmoother";           // ari's thing
 import { ScrollTrigger } from "gsap/ScrollTrigger";
-import { ScrollSmoother } from "gsap/ScrollSmoother";
+import { gsap } from "gsap";
 
 function App() {
     const [logged, setLogged] = useState(() => {

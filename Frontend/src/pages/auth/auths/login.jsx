@@ -1,7 +1,8 @@
 import { verifyUser } from "../../../api.js"
 import { useState } from "react"
 import axios from "axios"
-import Forgotpassword from "./forgotpassword.jsx"
+
+import Forgotpassword from "./forgotpassword.jsx"                    // component that calling
 
 export default function Login({ setLogged, setNotification }) {
 

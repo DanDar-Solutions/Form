@@ -3,7 +3,7 @@ import styles from './ViewResponses.module.css';
 import ResponseList from '../../components/ResponseList/ResponseList';
 
 function ViewResponses() {
-  // Dummy data for testing - in a real app, this would come from an API
+  // ari!! AI-aar comment bicuulhee boli!!!!
   const [responses, setResponses] = useState([]);
 
   return (
