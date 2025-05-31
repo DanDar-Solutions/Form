@@ -1,6 +1,6 @@
 .notification {
     position: fixed;
-    top: 20px;
+    bottom: 20px;
     right: 20px;
     min-width: 300px;
     padding: 15px 20px;
@@ -9,8 +9,8 @@
     justify-content: space-between;
     align-items: center;
     box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
-    animation: slideIn 0.3s ease forwards;
-    z-index: 1000;
+    animation: slideInBottom 0.3s ease forwards;
+    z-index: 9999;
   }
   
   .message {
@@ -57,13 +57,13 @@
     border-left: 4px solid #ff8f00;
   }
   
-  @keyframes slideIn {
+  @keyframes slideInBottom {
     from {
-      transform: translateX(100%);
+      transform: translateY(100%);
       opacity: 0;
     }
     to {
-      transform: translateX(0);
+      transform: translateY(0);
       opacity: 1;
     }
-  } 
+  }

@@ -13,7 +13,7 @@ function CreateForm({logged}) {
   const [title, setTitle] = useState('');
   const [description, setDescription] = useState('');
   const [questions, setQuestions] = useState([]);
-  const [notification, setNotification] = useState({ message: '', type: '' });
+  const [notification, setNotification] = useState({ message: '', type: '', id: null });
   const [showDeleteConfirm, setShowDeleteConfirm] = useState(false);
   const [questionToDelete, setQuestionToDelete] = useState(null);
   const [showLeaveConfirm, setShowLeaveConfirm] = useState(false);
@@ -49,9 +49,12 @@ function CreateForm({logged}) {
       setQuestions(questions.filter(q => q.id !== questionToDelete));
       setShowDeleteConfirm(false);
       setQuestionToDelete(null);
+      
+      const notificationId = Date.now();
       setNotification({
         message: 'Question deleted successfully',
-        type: 'success'
+        type: 'success',
+        id: notificationId
       });
     }
   };
@@ -78,7 +81,8 @@ function CreateForm({logged}) {
       if (!title.trim()) {
         setNotification({
           message: 'Please enter a form title',
-          type: 'error'
+          type: 'error',
+          id: Date.now()
         });
         return;
       }
@@ -87,7 +91,8 @@ function CreateForm({logged}) {
     if (questions.length === 0) {
       setNotification({
         message: 'Please add at least one question',
-        type: 'error'
+        type: 'error',
+        id: Date.now()
       });
       return;
     }
@@ -97,7 +102,8 @@ function CreateForm({logged}) {
     if (invalidQuestions.length > 0) {
       setNotification({
         message: 'Please fill in all question texts',
-        type: 'error'
+        type: 'error',
+        id: Date.now()
       });
       return;
     }
@@ -116,13 +122,15 @@ function CreateForm({logged}) {
 
       setNotification({
         message: 'Form saved successfully!',
-        type: 'success'
+        type: 'success',
+        id: Date.now()
       });
 
     } catch (error) {
       setNotification({
         message: 'Error saving form: ' + (error.message || 'Unknown error'),
-        type: 'error'
+        type: 'error',
+        id: Date.now()
       });
     } finally {
       setIsLoading(false);
@@ -138,7 +146,8 @@ function CreateForm({logged}) {
     setShowLeaveConfirm(false);
     setNotification({
       message: 'Form cleared',
-      type: 'info'
+      type: 'info',
+      id: Date.now()
     });
   };    
 
@@ -148,8 +157,9 @@ function CreateForm({logged}) {
 
       <Notification 
         message={notification.message} 
-        type={notification.type} 
-        onClose={() => setNotification({ message: '', type: '' })}
+        type={notification.type}
+        id={notification.id}
+        onClose={() => setNotification({ message: '', type: '', id: null })}
       />
 
       <ConfirmDialog
