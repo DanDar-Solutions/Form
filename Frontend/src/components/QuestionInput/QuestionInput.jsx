@@ -85,9 +85,15 @@ function QuestionInput({ id, question, onQuestionChange, onDelete, isDragging = 
       )}
       
       {questionType === 'radio' && (
-        <MultipleChoice 
+        <MultipleChoice
           options={question.options || []}
-          onChange={(options) => onQuestionChange({ ...question, options })}
+          selectedOptionId={question.correctOptionId}
+          onChange={(options) =>
+            onQuestionChange({ ...question, options })
+          }
+          onSelect={(selected) =>
+            onQuestionChange({ ...question, correctOptionId: selected?.id })
+          }
         />
       )}
       

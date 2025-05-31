@@ -4,6 +4,8 @@ import './MultipleChoiceGrid.css';
 export default function MultipleChoiceGrid({ options = { rows: [], columns: [] }, onChange }) {
   const [rows, setRows] = useState(options.rows || []);
   const [columns, setColumns] = useState(options.columns || []);
+  const [selection, setSelection] = useState({});
+
   
   useEffect(() => {
     if (JSON.stringify(options.rows) !== JSON.stringify(rows)) {
@@ -11,6 +13,9 @@ export default function MultipleChoiceGrid({ options = { rows: [], columns: [] }
     }
     if (JSON.stringify(options.columns) !== JSON.stringify(columns)) {
       setColumns(options.columns || []);
+    }
+    if (options.selection) {
+      setSelection(options.selection);
     }
   }, [options]);
   
@@ -40,15 +45,33 @@ export default function MultipleChoiceGrid({ options = { rows: [], columns: [] }
   
   const removeRow = (id) => {
     const newRows = rows.filter(row => row.id !== id);
+    // selection-с тухайн row-ийн сонголтыг устгах
+    const newSelection = { ...selection };
+    delete newSelection[id];
     setRows(newRows);
-    onChange({ rows: newRows, columns });
+    setSelection(newSelection);
+    onChange({ rows: newRows, columns, selection: newSelection });
   };
   
   const removeColumn = (id) => {
     const newColumns = columns.filter(col => col.id !== id);
+    // selection-с тухайн column сонголтыг устгах (тухайн column сонгогдсон row-үүдийг шалгах)
+    const newSelection = { ...selection };
+    for (const rowId in newSelection) {
+      if (newSelection[rowId] === id) {
+        delete newSelection[rowId];
+      }
+    }
     setColumns(newColumns);
-    onChange({ rows, columns: newColumns });
+    setSelection(newSelection);
+    onChange({ rows, columns: newColumns, selection: newSelection });
   };
+  const handleSelect = (rowId, columnId) => {
+    const newSelection = { ...selection, [rowId]: columnId };
+    setSelection(newSelection);
+    onChange({ rows, columns, selection: newSelection }); // Шинэ утга дамжуулна
+  };
+
   
   return (
     <div className="gridWrapper">
@@ -104,7 +127,12 @@ export default function MultipleChoiceGrid({ options = { rows: [], columns: [] }
                   <td>{row.text || 'Untitled'}</td>
                   {columns.map(col => (
                     <td key={col.id}>
-                      <input type="radio" name={`row_${row.id}`} />
+                      <input
+                        type="radio"
+                        name={`row_${row.id}`}
+                        checked={selection[row.id] === col.id}
+                        onChange={() => handleSelect(row.id, col.id)}
+                      />
                     </td>
                   ))}
                 </tr>

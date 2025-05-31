@@ -1,16 +1,24 @@
 import { useState, useEffect } from 'react';
 import './MultipleChoice.css';
 
-export default function MultipleChoice({ options = [], onChange }) {
+export default function MultipleChoice({
+  options = [],
+  onChange,
+  onSelect,
+  selectedOptionId = null,
+}) {
   const [items, setItems] = useState(options || []);
-  const [selectedOption, setSelectedOption] = useState(null);
+  const [selectedOption, setSelectedOption] = useState(selectedOptionId);
 
   useEffect(() => {
     if (JSON.stringify(options) !== JSON.stringify(items)) {
       setItems(options);
     }
   }, [options]);
-
+  useEffect(() => {
+    setSelectedOption(selectedOptionId);
+  }, [selectedOptionId]);
+ 
   const addOption = () => {
     const newItems = [...items, { id: Date.now(), text: '' }];
     setItems(newItems);
@@ -34,8 +42,13 @@ export default function MultipleChoice({ options = [], onChange }) {
   };
 
   const handleSelect = (id) => {
-    setSelectedOption(id);
-  };
+  setSelectedOption(id);
+  if (onSelect) {
+    const selected = items.find(item => item.id === id);
+    onSelect(selected);
+  }
+};
+
 
   return (
     <div className="multipleChoiceWrapper">
