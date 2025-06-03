@@ -13,8 +13,12 @@ import {
   updateUser,
   
 } from "../controller/userController.js";
+import verifyCaptchaRouter from "./verifyCaptcha.js";
 
 const router = express.Router();
+
+// Use the reCAPTCHA verification routes
+router.use(verifyCaptchaRouter);
 
 // === USER ROUTES ===
 router.get("/users", allUsers);
