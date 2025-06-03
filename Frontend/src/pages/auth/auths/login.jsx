@@ -80,9 +80,9 @@ export default function Login({ setLogged, setNotification }) {
             console.log(response);
             
             if (response) {
-                sessionStorage.setItem("User", JSON.stringify({
-                    id: response.data.id,   // '68383ba5ebb6b73ee351562a'
-                    name: response.data.name // 'admin123'
+                localStorage.setItem("User", JSON.stringify({
+                    id: response.data.id,
+                    name: response.data.name
                 }));
                 setLogged(true); //  state
                 localStorage.setItem("logged", "true"); //  persistent login

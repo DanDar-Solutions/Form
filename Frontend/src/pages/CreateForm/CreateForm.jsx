@@ -6,13 +6,13 @@ import FormTitle from '../../components/FormTitle/FormTitle';              //com
 import Notification from '../../components/ux/Notification/Notification';
 import ConfirmDialog from '../../components/ux/Confirm/ConfirmDialog';
 import QuestionInput from '../../components/QuestionInput/QuestionInput';
+import SortableQuestionItem from '../../components/QuestionInput/SortableQuestionItem';
 
 import {saveForm} from "../../api"                                         // function to request to backend (i guess)
 
 import { DndContext, closestCenter, KeyboardSensor, PointerSensor, useSensor, useSensors } from '@dnd-kit/core';          // DnD kit
 import { arrayMove, SortableContext, sortableKeyboardCoordinates, verticalListSortingStrategy } from '@dnd-kit/sortable'; // DnD kit
 import { restrictToVerticalAxis } from '@dnd-kit/modifiers';                                                              // DnD kit
-import SortableQuestionItem from '../../components/QuestionInput/SortableQuestionItem';
 
 function CreateForm({logged}) {
   const [title, setTitle] = useState('');
@@ -102,18 +102,12 @@ function CreateForm({logged}) {
 
   ////////////////////// //////////////////////  //////////////////////  //////////////////////  //////////////////////  //////////////////////
     const handleSaveForm = async () => {
-      const storedUser = sessionStorage.getItem("User");
-      
-      if (!storedUser) {
-        console.log("User not found in sessionStorage",storedUser);  // ene bol auth bug shv (bug1)
-        return;
-      }
+const storedUser = localStorage.getItem("User");
+const user = storedUser ? JSON.parse(storedUser) : null;
 
-      const user = JSON.parse(storedUser);
-      const userId = user._id || user.id;           // ene nileed utagagui um shig bnle
-
+const userId = user?.id;
       if (!userId) {
-        console.log("User ID is missing");
+        console.log("User ID is missing",userId);
         return;
       }
 
