@@ -7,6 +7,7 @@ import CreateForm from './pages/CreateForm/CreateForm';
 import ViewResponses from './pages/ViewResponses/ViewResponses';
 import Auth from './pages/auth/auth';
 import ViewForm from "./pages/fillForm/fillForm"
+import Home from "./pages/home/home";
    
 import { ScrollSmoother } from "gsap/ScrollSmoother";           // ari's thing
 import { ScrollTrigger } from "gsap/ScrollTrigger";
@@ -36,7 +37,7 @@ function App() {
         <div className="app">
           <main>
             <Routes>
-              <Route path="/" element={<CreateForm logged={logged}/>} />
+              <Route path="/" element={<Home logged={logged}/>} />
               <Route path="/create" element={<CreateForm logged={logged}/>} />
               <Route path="/responses/:formId" element={<ViewResponses />} />
               <Route path="/auth" element={<Auth setLogged={setLogged} logged={logged} />} />

@@ -10,7 +10,7 @@ function Navbar() {
       </div>
       <ul className="navLinks">
         <li>
-          <Link to="/">Create Form</Link>
+          <Link to="/create">Create Form</Link>
         </li>
         <li>
           <Link to="/ViewResponses">Responses</Link>
