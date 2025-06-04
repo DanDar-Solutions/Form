@@ -56,7 +56,4 @@ export async function saveForm(userId, formData) {
         console.error("Error while saving:", message);
         throw new Error(message);  // return error instead of null (i think)
     }
-
-
-
 }
