@@ -13,10 +13,10 @@ function Navbar() {
           <Link to="/create">Create Form</Link>
         </li>
         <li>
-          <Link to="/ViewResponses">Responses</Link>
+          <Link to="/responses/:formId">Responses</Link>
         </li>
         <li>
-          <Link to="/fill">fill</Link>
+          <Link to="/fill/:formId">fill</Link>
         </li>
         <li>
           <Link to="/auth">

@@ -57,3 +57,14 @@ export async function saveForm(userId, formData) {
         throw new Error(message);  // return error instead of null (i think)
     }
 }
+export async function getForm(userId, formId) {
+    try {
+        const response = await axios.get(`${URL}/api/users/${userId}/forms/${formId}`);
+        console.log(response.data)
+        return response.data;
+    } catch (error) {
+        const message = error.response?.data?.message || error.message || 'Тодорхойгүй алдаа';
+        console.error("Error while fetching form:", message);
+        throw new Error(message);
+    }
+}

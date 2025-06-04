@@ -1,6 +1,7 @@
 import { useState } from 'react';                                          // required thing
 import styles from './CreateForm.module.css';
 import { useNavigate } from "react-router-dom";
+import { v4 as uuidv4 } from 'uuid';
 
 import FormTitle from '../../components/FormTitle/FormTitle';              //components that calling
 import Notification from '../../components/ux/Notification/Notification';
@@ -13,7 +14,7 @@ import { DndContext, closestCenter, KeyboardSensor, PointerSensor, useSensor, us
 import { arrayMove, SortableContext, sortableKeyboardCoordinates, verticalListSortingStrategy } from '@dnd-kit/sortable'; // DnD kit
 import { restrictToVerticalAxis } from '@dnd-kit/modifiers';                                                              // DnD kit
 
-function CreateForm({logged}) {
+function CreateForm({ logged, setFormId }) {
   const [title, setTitle] = useState('');
   const [description, setDescription] = useState('');
   const [questions, setQuestions] = useState([]);
@@ -115,14 +116,14 @@ function CreateForm({logged}) {
   };    
   ////////////////////// //////////////////////  //////////////////////  //////////////////////  //////////////////////  //////////////////////
     const handleSaveForm = async () => {
-const storedUser = localStorage.getItem("User");
-const user = storedUser ? JSON.parse(storedUser) : null;
+    const storedUser = localStorage.getItem("User");
+    const user = storedUser ? JSON.parse(storedUser) : null;
 
-const userId = user?.id;
-      if (!userId) {
-        console.log("User ID is missing",userId);
-        return;
-      }
+    const userId = user?.id;
+          if (!userId) {
+            console.log("User ID is missing",userId);
+            return;
+          }
 
       // title baina uu?
       if (!title.trim()) {
@@ -156,14 +157,17 @@ const userId = user?.id;
     }
 
     // data scheme
+    const formId = uuidv4();
     const formData = {
       title,
       description,
       questions,
+      formId
     };
+    console.log(formId)
+    setFormId(formId); // Send the ID back to App
 
     setIsLoading(true);
-
     try {
       await saveForm(userId, formData); // save on server > dataBase 
 
@@ -268,12 +272,9 @@ const userId = user?.id;
 
             {isLoading ? 'Loading...' : 'Publish Form'}
           </button>
-
         </div>
-
       </div>
       <div>
-
         <div>
           <ConfirmDialog
               isOpen={showPublishConfirm}
@@ -282,7 +283,7 @@ const userId = user?.id;
               confirmText="Publish"
               cancelText = 'Cancel'
               onConfirm={() => {
-                confirmClearForm;
+                confirmClearForm();
                 handleSaveForm();
                 setShowPublishedConfirm(true)}}
               onCancel={() => {
@@ -290,7 +291,6 @@ const userId = user?.id;
                 setShowPublishConfirm(false)}}
             />
         </div>
-
         <div>
           <ConfirmDialog
               isOpen={showPublishedConfirm}
@@ -308,7 +308,6 @@ const userId = user?.id;
               }}
             />
         </div>
-        
       </div>
     </div>
   );
