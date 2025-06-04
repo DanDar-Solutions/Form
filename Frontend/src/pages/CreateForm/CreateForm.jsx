@@ -5,7 +5,6 @@ import { useNavigate } from "react-router-dom";
 import FormTitle from '../../components/FormTitle/FormTitle';              //components that calling
 import Notification from '../../components/ux/Notification/Notification';
 import ConfirmDialog from '../../components/ux/Confirm/ConfirmDialog';
-import QuestionInput from '../../components/QuestionInput/QuestionInput';
 import SortableQuestionItem from '../../components/QuestionInput/SortableQuestionItem';
 
 import {saveForm} from "../../api"                                         // function to request to backend (i guess)
@@ -19,9 +18,13 @@ function CreateForm({logged}) {
   const [description, setDescription] = useState('');
   const [questions, setQuestions] = useState([]);
   const [notification, setNotification] = useState({ message: '', type: '', id: null });
-  const [showDeleteConfirm, setShowDeleteConfirm] = useState(false);
   const [questionToDelete, setQuestionToDelete] = useState(null);
+
+  const [showDeleteConfirm, setShowDeleteConfirm] = useState(false);
+  const [showPublishedConfirm, setShowPublishedConfirm] = useState(false);
+  const [showPublishConfirm, setShowPublishConfirm] = useState(false);
   const [showLeaveConfirm, setShowLeaveConfirm] = useState(false);
+  
   const [isLoading, setIsLoading] = useState(false);
   const navigate = useNavigate();
 
@@ -99,7 +102,17 @@ function CreateForm({logged}) {
     }
   };
 
-
+  const confirmClearForm = () => {
+    setTitle('');
+    setDescription('');
+    setQuestions([]);
+    setShowLeaveConfirm(false);
+    setNotification({
+      message: 'Form cleared',
+      type: 'info',
+      id: Date.now()
+    });
+  };    
   ////////////////////// //////////////////////  //////////////////////  //////////////////////  //////////////////////  //////////////////////
     const handleSaveForm = async () => {
 const storedUser = localStorage.getItem("User");
@@ -152,7 +165,7 @@ const userId = user?.id;
     setIsLoading(true);
 
     try {
-      await saveForm(userId, formData); // save on server > dataBase        ((bug2) not working when updating just forced to save to dataBase(...newData) // solution(programm needed by id))
+      await saveForm(userId, formData); // save on server > dataBase 
 
       setNotification({
         message: 'Form saved successfully!',
@@ -171,19 +184,6 @@ const userId = user?.id;
     }
   };
   ////////////////////// //////////////////////  //////////////////////  //////////////////////  //////////////////////  //////////////////////
-
-
-  const confirmClearForm = () => {
-    setTitle('');
-    setDescription('');
-    setQuestions([]);
-    setShowLeaveConfirm(false);
-    setNotification({
-      message: 'Form cleared',
-      type: 'info',
-      id: Date.now()
-    });
-  };    
 
   return (
     <div className={styles.container}>
@@ -261,15 +261,54 @@ const userId = user?.id;
             className={styles.saveButton} 
             onClick={() => {
               authCheck();
-              handleSaveForm();
+              setShowPublishConfirm(true);
             }}
             disabled={isLoading}
-          >
-            {isLoading ? 'Saving...' : 'Save Form'}
+            >
+
+            {isLoading ? 'Loading...' : 'Publish Form'}
           </button>
 
         </div>
 
+      </div>
+      <div>
+
+        <div>
+          <ConfirmDialog
+              isOpen={showPublishConfirm}
+              title="Publish Form"
+              message="Are you sure?"
+              confirmText="Publish"
+              cancelText = 'Cancel'
+              onConfirm={() => {
+                confirmClearForm;
+                handleSaveForm();
+                setShowPublishedConfirm(true)}}
+              onCancel={() => {
+                setShowLeaveConfirm(false)
+                setShowPublishConfirm(false)}}
+            />
+        </div>
+
+        <div>
+          <ConfirmDialog
+              isOpen={showPublishedConfirm}
+              title="Form Link"
+              message="Link.link"
+              confirmText="Copy"
+              onConfirm={() => {
+                confirmClearForm
+                // copy to clipboard logic can be here later
+              }}
+              onCancel={() => {
+                setShowLeaveConfirm(false)
+                setShowPublishConfirm(false)
+                setShowPublishedConfirm(false)
+              }}
+            />
+        </div>
+        
       </div>
     </div>
   );

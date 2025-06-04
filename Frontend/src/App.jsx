@@ -6,7 +6,7 @@ import Navbar from './components/Navbar/Navbar';                 // components t
 import CreateForm from './pages/CreateForm/CreateForm';
 import ViewResponses from './pages/ViewResponses/ViewResponses';
 import Auth from './pages/auth/auth';
-import ViewForm from "./pages/fillForm/fillForm"
+import FillForm from "./pages/fillForm/fillForm"
 import Home from "./pages/home/home";
    
 import { ScrollSmoother } from "gsap/ScrollSmoother";           // ari's thing
@@ -41,7 +41,7 @@ function App() {
               <Route path="/create" element={<CreateForm logged={logged}/>} />
               <Route path="/responses/:formId" element={<ViewResponses />} />
               <Route path="/auth" element={<Auth setLogged={setLogged} logged={logged} />} />
-              <Route path="/fill" element={<ViewForm />} />
+              <Route path="/fill/:id" element={<FillForm />} />
             </Routes>
           </main>
         </div>
