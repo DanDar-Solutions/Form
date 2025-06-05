@@ -14,7 +14,7 @@ import { DndContext, closestCenter, KeyboardSensor, PointerSensor, useSensor, us
 import { arrayMove, SortableContext, sortableKeyboardCoordinates, verticalListSortingStrategy } from '@dnd-kit/sortable'; // DnD kit
 import { restrictToVerticalAxis } from '@dnd-kit/modifiers';                                                              // DnD kit
 
-function CreateForm({ logged, setFormId }) {
+function CreateForm({ logged }) {
   const [title, setTitle] = useState('');
   const [description, setDescription] = useState('');
   const [questions, setQuestions] = useState([]);
@@ -25,6 +25,9 @@ function CreateForm({ logged, setFormId }) {
   const [showPublishedConfirm, setShowPublishedConfirm] = useState(false);
   const [showPublishConfirm, setShowPublishConfirm] = useState(false);
   const [showLeaveConfirm, setShowLeaveConfirm] = useState(false);
+  const [formLink, setFormLink] = useState('');
+
+
   
   const [isLoading, setIsLoading] = useState(false);
   const navigate = useNavigate();
@@ -115,68 +118,68 @@ function CreateForm({ logged, setFormId }) {
     });
   };    
   ////////////////////// //////////////////////  //////////////////////  //////////////////////  //////////////////////  //////////////////////
-    const handleSaveForm = async () => {
+  const handleSaveForm = async () => {
     const storedUser = localStorage.getItem("User");
     const user = storedUser ? JSON.parse(storedUser) : null;
-
+    
     const userId = user?.id;
-          if (!userId) {
-            console.log("User ID is missing",userId);
+    if (!userId) {
+      console.log("User ID is missing",userId);
+      return;
+          }
+          
+          // title baina uu?
+          if (!title.trim()) {
+            setNotification({
+              message: 'Please enter a form title',
+              type: 'error',
+              id: Date.now()
+            });
             return;
           }
-
-      // title baina uu?
-      if (!title.trim()) {
-        setNotification({
-          message: 'Please enter a form title',
-          type: 'error',
-          id: Date.now()
-        });
-        return;
-      }
-  
-    // if > no question
-    if (questions.length === 0) {
-      setNotification({
-        message: 'Please add at least one question',
-        type: 'error',
-        id: Date.now()
-      });
-      return;
-    }
-
-    // if question is empty
-    const invalidQuestions = questions.filter(q => !q.text.trim());
-    if (invalidQuestions.length > 0) {
-      setNotification({
-        message: 'Please fill in all question texts',
-        type: 'error',
-        id: Date.now()
-      });
-      return;
-    }
-
-    // data scheme
-    const formId = uuidv4();
-    const formData = {
-      title,
-      description,
-      questions,
-      formId
-    };
-    console.log(formId)
-    setFormId(formId); // Send the ID back to App
-
-    setIsLoading(true);
-    try {
+          
+          // if > no question
+          if (questions.length === 0) {
+            setNotification({
+              message: 'Please add at least one question',
+              type: 'error',
+              id: Date.now()
+            });
+            return;
+          }
+          
+          // if question is empty
+          const invalidQuestions = questions.filter(q => !q.text.trim());
+          if (invalidQuestions.length > 0) {
+            setNotification({
+              message: 'Please fill in all question texts',
+              type: 'error',
+              id: Date.now()
+            });
+            return;
+          }
+          
+          // data scheme
+          const formId = uuidv4();
+          const formData = {
+            title,
+            description,
+            questions,
+            formId
+          };
+          console.log(formId)
+          setFormLink(`localhost:5173/fill/${formId}`)
+          
+          setIsLoading(true);
+          try {
       await saveForm(userId, formData); // save on server > dataBase 
-
+      
       setNotification({
         message: 'Form saved successfully!',
         type: 'success',
         id: Date.now()
       });
-
+      
     } catch (error) {
       setNotification({
         message: 'Error saving form: ' + (error.message || 'Unknown error'),
@@ -188,7 +191,7 @@ function CreateForm({ logged, setFormId }) {
     }
   };
   ////////////////////// //////////////////////  //////////////////////  //////////////////////  //////////////////////  //////////////////////
-
+  
   return (
     <div className={styles.container}>
       <h1>Create a New Form</h1>
@@ -283,9 +286,11 @@ function CreateForm({ logged, setFormId }) {
               confirmText="Publish"
               cancelText = 'Cancel'
               onConfirm={() => {
+                handleSaveForm().then(() => {
+                  setShowPublishedConfirm(true);
+                });
                 confirmClearForm();
-                handleSaveForm();
-                setShowPublishedConfirm(true)}}
+              }}
               onCancel={() => {
                 setShowLeaveConfirm(false)
                 setShowPublishConfirm(false)}}
@@ -295,11 +300,11 @@ function CreateForm({ logged, setFormId }) {
           <ConfirmDialog
               isOpen={showPublishedConfirm}
               title="Form Link"
-              message="Link.link"
+              message={formLink}
               confirmText="Copy"
               onConfirm={() => {
-                confirmClearForm
-                // copy to clipboard logic can be here later
+                navigator.clipboard.writeText(formLink);
+                confirmClearForm()
               }}
               onCancel={() => {
                 setShowLeaveConfirm(false)
