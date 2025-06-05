@@ -10,6 +10,13 @@
   left: 0;
   right: 0;
   z-index: 1000;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+}
+
+.navbar-left {
+  display: flex;
+  align-items: center;
+  gap: 1rem;
 }
 
 .logo a {
@@ -17,6 +24,12 @@
   text-decoration: none;
   font-size: 1.2rem;
   font-weight: bold;
+}
+
+.navbar-actions {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
 }
 
 .navLinks {
@@ -34,8 +47,118 @@
   color: white;
   text-decoration: none;
   transition: opacity 0.3s ease;
+  display: flex;
+  align-items: center;
 }
 
 .navLinks a:hover {
   opacity: 0.8;
-} 
+}
+
+.navLinks li .MuiIconButton-root {
+  color: white;
+  padding: 8px;
+}
+
+/* Style for the new buttons */
+.action-button {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: none;
+  border: none;
+  color: white;
+  padding: 8px;
+  cursor: pointer;
+  transition: opacity 0.3s ease;
+}
+
+.action-button:hover {
+  opacity: 0.8;
+}
+
+.action-button:disabled {
+  color: rgba(255, 255, 255, 0.3); /* Dimmed color for disabled state */
+  cursor: not-allowed;
+}
+
+/* Style for the PaletteMenu and LongMenu IconButton */
+.navbar-actions .MuiIconButton-root {
+  color: white;
+  padding: 8px;
+}
+
+.fill-link {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+}
+
+.fill-link .MuiIconButton-root {
+  padding: 4px;
+}
+
+.user-icon {
+  width: 24px;
+  height: 24px;
+}
+
+/* Print dialog styles */
+.print-content {
+  padding: 20px;
+  background: #f5f5f5;
+  border: 1px solid #ccc;
+  font-family: Arial, sans-serif;
+  color: #000;
+  min-height: 200px;
+}
+
+.print-content h2 {
+  font-size: 24px;
+  margin-bottom: 10px;
+  color: #000;
+}
+
+.print-content p {
+  margin: 5px 0;
+  color: #000;
+}
+
+.print-content ol {
+  padding-left: 20px;
+}
+
+.print-content input[type="radio"] {
+  margin-right: 5px;
+}
+
+.print-content a {
+  font-size: 10px;
+  color: #000;
+}
+
+/* Ensure visibility during print */
+@media print {
+  body * {
+    visibility: hidden;
+  }
+  .print-content,
+  .print-content * {
+    visibility: visible !important;
+    color: #000 !important;
+  }
+  .print-content {
+    position: absolute;
+    left: 0;
+    top: 0;
+    width: 100%;
+    background: none;
+    border: none;
+  }
+  .navbar,
+  .MuiDialogActions-root,
+  .MuiDialogTitle-root,
+  .MuiDialog-root {
+    display: none !important;
+  }
+}

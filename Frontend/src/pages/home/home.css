@@ -71,4 +71,71 @@
   color: #202124;
   margin: 0;
 }
+
+.recent-section {
+  margin-top: 60px;
+  border-top: 1px solid #dadce0;
+  padding-top: 20px;
+}
+
+.recent-section h2 {
+  font-size: 24px;
+  font-weight: 400;
+  color: #202124;
+  margin-bottom: 20px;
+}
+
+.recent-forms-container {
+  min-height: 120px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  border-bottom: 1px solid #dadce0;
+  padding-bottom: 40px;
+}
+
+.data-message {
+  color: #5f6368;
+  font-size: 16px;
+}
+
+.forms-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
+  gap: 16px;
+  width: 100%;
+}
+
+.form-card {
+  border: 1px solid #dadce0;
+  border-radius: 8px;
+  overflow: hidden;
+  cursor: pointer;
+  transition: box-shadow 0.2s;
+  background-color: #f8f9fa;
+}
+
+.form-card:hover {
+  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.2);
+}
+
+.form-card-content {
+  padding: 16px;
+}
+
+.form-card h3 {
+  margin: 0 0 8px 0;
+  font-size: 16px;
+  font-weight: 500;
+  color: #202124;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.form-date {
+  margin: 0;
+  font-size: 12px;
+  color: #5f6368;
+}
   
