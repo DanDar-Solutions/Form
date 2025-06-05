@@ -52,6 +52,5 @@ const getForm = async (req, res) => {
 
 export {
   saveForm,
-  // editForm, 
-  // deleteForm ,
+  getForm, 
 };

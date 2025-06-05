@@ -189,7 +189,7 @@ function LongMenu({ onDeleteForm }) {
         aria-haspopup="true"
         onClick={handleClick}
       >
-        <MoreVertIcon />
+        {MoreVertIcon ? <MoreVertIcon /> : 'Menu'} {/* Debug fallback */}
       </IconButton>
       <Menu
         id="long-menu"
@@ -304,11 +304,23 @@ function LongMenu({ onDeleteForm }) {
       <Dialog open={printDialogOpen} onClose={handleCancelPrint}>
         <DialogTitle>Хэвлэх</DialogTitle>
         <DialogContent>
-          <div ref={componentRef} style={{ padding: '20px' }}>
+          <div
+            ref={componentRef}
+            style={{ padding: '20px' }}
+          >
             <h2>Танай Маягтын Мэдээлэл</h2>
+            <p>03:07 PM +08, Thursday, June 05, 2025</p>
             <p>Зөвхөн энэ хэсэг хэвлэгдэнэ. Dialog-ийн бусад хэсэг хэвлэгдэхгүй.</p>
           </div>
         </DialogContent>
+        <DialogActions>
+          <Button onClick={handleCancelPrint} color="secondary">
+            Cancel
+          </Button>
+          <Button onClick={handlePrintAction} color="primary" autoFocus>
+            Print
+          </Button>
+        </DialogActions>
       </Dialog>
       {/* Shortcuts Dialog */}
       <Dialog open={shortcutsDialogOpen} onClose={handleShortcutsDialogClose}>
@@ -471,11 +483,19 @@ function Navbar() {
     // Add your actual delete logic here (e.g., API call to delete the form)
   };
 
-  // Style өөрчлөгдөх бүрд түүхэнд хадгалах
+  // Deep copy helper to avoid reference issues
+  const deepCopy = (obj) => JSON.parse(JSON.stringify(obj));
+
+  // Style changes handler
   const updateStyle = (newStyles) => {
-    setHistory((prev) => [...prev, formStyles]);
-    setRedoStack([]); // redo stack-г арилгах
-    setFormStyles((prev) => ({ ...prev, ...newStyles }));
+    console.log('Saving to history:', deepCopy(formStyles));
+    setHistory((prev) => [...prev, deepCopy(formStyles)]); // Save current state to history
+    setRedoStack([]); // Clear redo stack on new change
+    setFormStyles((prev) => {
+      const updatedStyles = { ...prev, ...newStyles };
+      console.log('Updated styles:', updatedStyles);
+      return updatedStyles;
+    }); // Update form styles
   };
 
   const handleFontChange = (font) => updateStyle({ font });
@@ -483,22 +503,28 @@ function Navbar() {
   const handleBackgroundColorChange = (backgroundColor) => updateStyle({ backgroundColor });
 
   const handleUndo = () => {
-    if (history.length > 0) {
-      const prevStyle = history[history.length - 1];
-      setRedoStack((prev) => [formStyles, ...prev]);
-      setHistory((prev) => prev.slice(0, prev.length - 1));
-      setFormStyles(prevStyle);
-    }
+    if (history.length === 0) return;
+    const prevStyle = history[history.length - 1];
+    console.log('Undoing to:', prevStyle);
+    setHistory((prev) => prev.slice(0, -1)); // Remove last history entry
+    setRedoStack((prev) => [deepCopy(formStyles), ...prev]); // Add current state to redo stack
+    setFormStyles(prevStyle); // Restore previous state
   };
 
   const handleRedo = () => {
-    if (redoStack.length > 0) {
-      const nextStyle = redoStack[0];
-      setHistory((prev) => [...prev, formStyles]);
-      setRedoStack((prev) => prev.slice(1));
-      setFormStyles(nextStyle);
-    }
+    if (redoStack.length === 0) return;
+    const nextStyle = redoStack[0];
+    console.log('Redoing to:', nextStyle);
+    setHistory((prev) => [...prev, deepCopy(formStyles)]); // Add current state to history
+    setRedoStack((prev) => prev.slice(1)); // Remove first redo entry
+    setFormStyles(nextStyle); // Restore next state
   };
+
+  // Debug: Log history and redoStack changes
+  React.useEffect(() => {
+    console.log('History:', history);
+    console.log('Redo Stack:', redoStack);
+  }, [history, redoStack]);
 
   return (
     <nav className="navbar">
@@ -507,17 +533,28 @@ function Navbar() {
           <Link to="/">Form clone GANG</Link>
         </div>
         <div className="navbar-actions">
-          <IconButton aria-label="undo" className="action-icon" onClick={handleUndo}>
+          <button
+            className="action-button"
+            onClick={handleUndo}
+            disabled={history.length === 0}
+            aria-label="undo"
+          >
             <ReplayIcon />
-          </IconButton>
-          <IconButton aria-label="redo" className="action-icon" onClick={handleRedo}>
+          </button>
+          <button
+            className="action-button"
+            onClick={handleRedo}
+            disabled={redoStack.length === 0}
+            aria-label="redo"
+          >
             <RefreshIcon />
-          </IconButton>
+          </button>
           <PaletteMenu
             onFontChange={handleFontChange}
             onColorChange={handleColorChange}
             onBackgroundColorChange={handleBackgroundColorChange}
           />
+          <LongMenu onDeleteForm={handleDeleteForm} />
         </div>
       </div>
       <ul className="navLinks">
