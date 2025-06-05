@@ -284,13 +284,10 @@ function CreateForm({ logged }) {
               title="Publish Form"
               message="Are you sure?"
               confirmText="Publish"
-              cancelText = 'Cancel'
               onConfirm={() => {
-                handleSaveForm().then(() => {
-                  setShowPublishedConfirm(true);
-                });
                 confirmClearForm();
-              }}
+                handleSaveForm();
+                setShowPublishedConfirm(true)}}
               onCancel={() => {
                 setShowLeaveConfirm(false)
                 setShowPublishConfirm(false)}}
@@ -303,8 +300,8 @@ function CreateForm({ logged }) {
               message={formLink}
               confirmText="Copy"
               onConfirm={() => {
-                navigator.clipboard.writeText(formLink);
-                confirmClearForm()
+                confirmClearForm
+                // copy to clipboard logic can be here later
               }}
               onCancel={() => {
                 setShowLeaveConfirm(false)

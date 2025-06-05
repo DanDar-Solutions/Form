@@ -43,7 +43,7 @@ export default function Auth({ setLogged, logged }) {
         className={styles["auth-button"]}
         style={{ backgroundColor: "#eee", color: "#333", marginTop: "1rem" }}
       >
-        {login ? "Need an account? Register" : "Already have an account? Login"}
+        {login ? "Already have an account? Login" :  "Need an account? Register"}
       </button>
     </div>
   );
