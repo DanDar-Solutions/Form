@@ -33,8 +33,8 @@ router.post("/auth/login", loginUser);
 
 
 // === FORM ROUTES ===
-router.post("/users/:id/forms",saveForm)
-router.get("/users/:userId/forms/:formId", getForm)
+router.post("/forms",saveForm)
+router.get("/forms/:formId", getForm)
 
 export default router;
  

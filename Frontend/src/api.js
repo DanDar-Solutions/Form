@@ -49,17 +49,20 @@ export async function verifyUser(user) {
 }
 export async function saveForm(userId, formData) {
     try {
-        const response = await axios.post(`${URL}/api/users/${userId}/forms`, formData);
+        const response = await axios.post(`${URL}/api/forms`, {
+            ...formData,
+            createdBy: userId,
+        });
         return response.data;
     } catch (error) {
-        const message = error.response?.data?.message || error.message || 'Тодорхойгүй алдаа'; // undefined ym shig bn 
+        const message = error.response?.data?.message || error.message || 'Тодорхойгүй алдаа';
         console.error("Error while saving:", message);
-        throw new Error(message);  // return error instead of null (i think)
+        throw new Error(message);
     }
 }
-export async function getForm(userId, formId) {
+export async function getForm(formId) {
     try {
-        const response = await axios.get(`${URL}/api/users/${userId}/forms/${formId}`);
+        const response = await axios.get(`${URL}/api/forms/${formId}`);
         console.log(response.data)
         return response.data;
     } catch (error) {

@@ -300,8 +300,8 @@ function CreateForm({ logged }) {
               message={formLink}
               confirmText="Copy"
               onConfirm={() => {
-                confirmClearForm
-                // copy to clipboard logic can be here later
+                navigator.clipboard.writeText(formLink);
+                confirmClearForm()
               }}
               onCancel={() => {
                 setShowLeaveConfirm(false)

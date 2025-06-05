@@ -45,8 +45,6 @@ const createUser = async (req, res) => {
 
     // createUser
     const user = await User.create({ name, email, password });
-
-    // return user_id
     res.status(200).json({ userId: user._id, message: "User created successfully" });
   } catch (error) {
     res.status(400).json({ error: error.message });
