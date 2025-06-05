@@ -1,16 +1,96 @@
-import meme from '../../public/memeV2.jpg';                  // yadimbee hine
+import { useNavigate } from 'react-router-dom';
+import { useState, useEffect } from 'react';
+import axios from 'axios';
+import googlePlusIcon from '../../public/googlePlusIcon.png';
+import './home.css';
 
-function Home() {
+const API_URL = "http://localhost:8000/api/users/:userId/forms/:formId";
 
+export default function Home() {
+    
+  const navigate = useNavigate();
+  const [forms, setForms] = useState([]);
+  const [loading, setLoading] = useState(true);
 
-    return(
-        <div>
+  // Fetch user's forms from the backend
+  useEffect(() => {
+    const fetchForms = async () => {
+      setLoading(true);
+      try {
+        // Get user from localStorage
+        const storedUser = localStorage.getItem("User");
+        if (!storedUser) {
+          setLoading(false);
+          return;
+        }
 
-            <h1>HOME</h1>
-            <img src={meme} alt="meme" />
-            
+        const user = JSON.parse(storedUser);
+        if (!user || !user.id) {
+          setLoading(false);
+          return;
+        }
+
+        // Fetch user's forms from the backend using the user ID
+        const response = await axios.get(`${API_URL}/users/${user.id}`);
+        if (response.data && response.data.forms) {
+          setForms(response.data.forms);
+        }
+      } catch (error) {
+        console.error("Error fetching forms:", error);
+      } finally {
+        setLoading(false);
+      }
+    };
+    
+    fetchForms();
+  }, []);
+
+  return (
+    <div className="home-container">
+      <div className="header">
+        <h1>Start a new form</h1>
+      </div>
+      
+      <div className="templates-container">
+        <div className="template-card" onClick={() => navigate('/create')}>
+          <div className="template-image-container">
+            <img src={googlePlusIcon} alt="Blank Form Template" className="template-image" />
+          </div>
+          <p className="template-name">Blank form</p>
         </div>
-    )
-}
+      </div>
 
-export default Home
+      <div className="recent-section">
+        <h2>Recent forms</h2>
+        <div className="recent-forms-container">
+          {loading ? (
+            <div className="data-message">
+              <p>Loading...</p>
+            </div>
+          ) : forms.length > 0 ? (
+            <div className="forms-grid">
+              {forms.map(form => (
+                <div 
+                  key={form._id} 
+                  className="form-card"
+                  onClick={() => navigate(`/view/${form._id}`)}
+                >
+                  <div className="form-card-content">
+                    <h3>{form.title}</h3>
+                    <p className="form-date">
+                      {form.createdAt ? new Date(form.createdAt).toLocaleDateString() : new Date().toLocaleDateString()}
+                    </p>
+                  </div>
+                </div>
+              ))}
+            </div>
+          ) : (
+            <div className="data-message">
+              <p>No Data</p>
+            </div>
+          )}
+        </div>
+      </div>
+    </div>
+  );
+}
