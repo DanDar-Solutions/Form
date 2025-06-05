@@ -16,7 +16,7 @@ function Navbar() {
           <Link to="/responses/:formId">Responses</Link>
         </li>
         <li>
-          <Link to="/fill/:formId">fill</Link>
+          <Link to="/fill/">fill</Link>
         </li>
         <li>
           <Link to="/auth">
