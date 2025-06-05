@@ -522,20 +522,13 @@ function Navbar() {
       </div>
       <ul className="navLinks">
         <li>
-          <Link to="/">Create Form</Link>
+          <Link to="/create">Create Form</Link>
         </li>
         <li>
-          <Link to="/ViewResponses">Responses</Link>
+          <Link to="/responses/:formId">Responses</Link>
         </li>
         <li>
-          <Link to="/fill" className="fill-link">
-            <IconButton aria-label="preview" className="action-icon">
-              <RemoveRedEyeIcon />
-            </IconButton>
-          </Link>
-        </li>
-        <li>
-          <LongMenu onDeleteForm={handleDeleteForm} />
+          <Link to="/fill">fill</Link>
         </li>
         <li>
           <Link to="/auth">

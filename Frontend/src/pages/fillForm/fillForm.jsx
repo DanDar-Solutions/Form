@@ -1,8 +1,9 @@
-import { useState, useEffect } from 'react';               // required things
-import axios from 'axios';
-import meme from '../../public/meme.webp';                  // eniigaa ustgaarai ari
+import { useState, useEffect } from 'react';
+import { useParams } from 'react-router-dom';  // ⬅️ энэ нэмэх хэрэгтэй
 
-import Connect from './types/Connect';                       // components types
+import { getForm } from "../../api"
+
+import Connect from './types/Connect';
 import Date from './types/Date';
 import MultipleChoice from './types/MultipleChoice';
 import MultipleChoiceGrid from './types/MultipleChoiceGrid';
@@ -10,30 +11,38 @@ import Swap from './types/Swap';
 import TextAnswer from './types/TextAnswer';
 import Time from './types/Time';
 
-export default function fillForm() {
-  const [data, setData] = useState({ forms: {} });
+export default function FillForm() {
+  const { formId } = useParams(); // ⬅️ URL-с formId-г авна
+  const [form, setForm] = useState({ forms: [] });
 
   useEffect(() => {
+    const storedUser = localStorage.getItem("User");
+    const user = storedUser ? JSON.parse(storedUser) : null;
+    const userId = user?.id;
+      console.log("User ID эсвэл formId алга байна:", userId, formId);
+
+    if (!userId || !formId) {
+      console.log("User ID эсвэл formId алга байна:", userId, formId);
+      return;
+    }
+
     async function fetchData() {
       try {
-        const res = await axios.get("http://localhost:8000/users/data");
-        setData(res.data);
+        const res = await getForm(userId, formId); // ⬅️ зөв userId, formId дамжуулна
+        setForm(res.data);
       } catch (err) {
         console.error("Алдаа гарлаа:", err);
       }
     }
 
     fetchData();
-  }, []);
+  }, [formId]);
 
   return (
     <div>
       <h2>ViewForm</h2>
 
-      <img src={meme} alt="meme" />
-      <h1>aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa</h1>  {/* <h1>bbbbbbbbbbbbbbbbbbbbbbbbbb</h1> */}
-
-      {Object.entries(data.forms).map(([formName, type], index) => (
+      {Object.entries(form.forms).map(([formName, type], index) => (
         <div key={index}>
           <strong>{formName}</strong>: {type}
           {type === "type1" && <Connect />}

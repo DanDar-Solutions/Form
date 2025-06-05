@@ -2,8 +2,7 @@ import express from "express";
 import { sendVerificationCode, verifyCode, loginUser } from "../controller/authController.js"
 import { 
   saveForm,
-  // editForm
-  // deleteForm
+  getForm
 } from "../controller/formController.js"
 import {
   allUsers,
@@ -35,9 +34,7 @@ router.post("/auth/login", loginUser);
 
 // === FORM ROUTES ===
 router.post("/users/:id/forms",saveForm)
-// router.post("/users/:id/forms",editForm)
-// router.post("/users/:id/forms",deleteForm)
-
+router.get("/users/:userId/forms/:formId", getForm)
 
 export default router;
  
