@@ -281,10 +281,9 @@ function CreateForm({ logged, setFormId }) {
               title="Publish Form"
               message="Are you sure?"
               confirmText="Publish"
-              cancelText = 'Cancel'
               onConfirm={() => {
-                confirmClearForm();
                 handleSaveForm();
+                confirmClearForm();
                 setShowPublishedConfirm(true)}}
               onCancel={() => {
                 setShowLeaveConfirm(false)
@@ -298,7 +297,7 @@ function CreateForm({ logged, setFormId }) {
               message="Link.link"
               confirmText="Copy"
               onConfirm={() => {
-                confirmClearForm
+                confirmClearForm()
                 // copy to clipboard logic can be here later
               }}
               onCancel={() => {
