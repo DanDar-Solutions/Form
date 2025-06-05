@@ -1,16 +1,16 @@
 import React, { useState } from 'react';
 import './QuestionInput.css';
 
-import Time from './types/dates/Time';
-import Date from './types/dates/Date';
-import MultipleChoiceGrid from './types/choices/MultipleChoiceGrid';
+import MultipleChoice from './types/choices/MultipleChoice';
 import Connect from './types/advanced/Connect';
 import Swap from './types/advanced/Swap';
 import ShortAnswer from './types/inputs/ShortAnswer';
-import MultipleChoice from './types/choices/MultipleChoice';
+import MultipleChoiceGrid from './types/choices/MultipleChoiceGrid';
+import Date from './types/dates/Date';
+import Time from './types/dates/Time';
 
 function QuestionInput({ id, question, onQuestionChange, onDelete, dragHandle }) {
-  const questionType = question.type || 'text';
+  const questionType = question.type || 'radio';
 
   return (
     <div className="questionCard">
