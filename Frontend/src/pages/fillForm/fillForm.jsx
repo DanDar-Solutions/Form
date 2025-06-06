@@ -19,7 +19,6 @@ export default function fillForm() {
   async function fetchData() {
     try {
       const res = await getForm(formId);
-      console.log("FORM:", res); // res = { title, description, ... }
       setForm(res);
     } catch (err) {
       console.error("Алдаа гарлаа:", err);

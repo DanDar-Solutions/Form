@@ -1,24 +1,19 @@
 import { useNavigate } from 'react-router-dom';
 import { useState, useEffect } from 'react';
-import axios from 'axios';
 import googlePlusIcon from '../../public/googlePlusIcon.png';
 import './home.css';
-
-const API_URL = "http://localhost:8000/api/users/:userId/forms/:formId";
+import { getForms } from '../../api'; // getForm импорт хийсэн
 
 export default function Home() {
-    
+
   const navigate = useNavigate();
   const [forms, setForms] = useState([]);
   const [loading, setLoading] = useState(true);
 
-  // Fetch user's forms from the backend
-  useEffect(() => {
-    const fetchForms = async () => {
-      setLoading(true);
-      try {
-        // Get user from localStorage
-        const storedUser = localStorage.getItem("User");
+  const fetchForms = async () => {
+    setLoading(true);
+    try {
+      const storedUser = localStorage.getItem("User");
         if (!storedUser) {
           setLoading(false);
           return;
@@ -29,12 +24,13 @@ export default function Home() {
           setLoading(false);
           return;
         }
-
-        // Fetch user's forms from the backend using the user ID
-        const response = await axios.get(`${API_URL}/users/${user.id}`);
-        if (response.data && response.data.forms) {
+        
+        // getForm функц ашиглаж байна
+        const response = await getForms(user.id);
+        if (response && response.data && response.data.forms) {
           setForms(response.data.forms);
         }
+        
       } catch (error) {
         console.error("Error fetching forms:", error);
       } finally {
@@ -42,6 +38,7 @@ export default function Home() {
       }
     };
     
+    useEffect(() => {
     fetchForms();
   }, []);
 
@@ -50,7 +47,7 @@ export default function Home() {
       <div className="header">
         <h1>Start a new form</h1>
       </div>
-      
+
       <div className="templates-container">
         <div className="template-card" onClick={() => navigate('/create')}>
           <div className="template-image-container">
@@ -73,7 +70,7 @@ export default function Home() {
                 <div 
                   key={form._id} 
                   className="form-card"
-                  onClick={() => navigate(`/view/${form._id}`)}
+                  onClick={() => navigate(`/fill/${form._id}`)}
                 >
                   <div className="form-card-content">
                     <h3>{form.title}</h3>
