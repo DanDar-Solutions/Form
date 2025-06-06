@@ -12,14 +12,14 @@ import Rtype7 from "./types/Time"
 
 import { getForm } from "../../api";
 
-export default function fillForm() {
+export default function FillForm() {
   const { formId } = useParams();
-  const [form, setForm] = useState(null); // эхний төлөв null байна
+  const [form, setForm] = useState(); 
 
   async function fetchData() {
     try {
       const res = await getForm(formId);
-      console.log("FORM:", res); // res = { title, description, ... }
+      console.log(res)
       setForm(res);
     } catch (err) {
       console.error("Алдаа гарлаа:", err);
@@ -29,30 +29,13 @@ export default function fillForm() {
   useEffect(() => {
     fetchData();
   }, [formId]);
-
-  // ⬇️ form null байвал "Loading..." гэж харуул
-  if (!form) return <p>Loading...</p>;
-
+  console.log(form)
+    if (!form) return <p>Loading...</p>;
   return (
     <div>
       <h1>{form.title}</h1>
-      <p>{form.description}</p>
-
-      <form>
-        {form.questions.map((q, index) => (
-          <div key={index} style={{ marginBottom: '1rem' }}>
-            <label>{q.question}</label><br />
-            {q.type === 1 && <Rtype1 question={q} />}
-            {q.type === 2 && <Rtype2 question={q} />}
-            {q.type === 3 && <Rtype3 question={q} />}
-            {q.type === 4 && <Rtype4 question={q} />}
-            {q.type === 5 && <Rtype5 question={q} />}
-            {q.type === 6 && <Rtype6 question={q} />}
-            {q.type === 7 && <Rtype7 question={q} />}
-          </div>
-        ))}
-        <button type="submit">Submit</button>
-      </form>
+      <p>{form.description} 12</p>
+    
 
     </div>
   );

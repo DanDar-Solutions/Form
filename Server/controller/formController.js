@@ -1,23 +1,27 @@
+import mongoose from "mongoose";
 import User from "../models/user.model.js";
 import Form from "../models/form.model.js";
-import mongoose from "mongoose";
 
 const saveForm = async (req, res) => {
   const { createdBy, formId, ...restFormData } = req.body;
-
   try {
     const user = await User.findById(createdBy);
     if (!user) {
       return res.status(404).json({ message: "User not found" });
     }
 
+    const generatedFormId = formId || new mongoose.Types.ObjectId().toString();
+
     const newForm = new Form({
-      ...restFormData,
       createdBy,
-      formId: formId || new mongoose.Types.ObjectId().toString(),
+      formId: generatedFormId,
+      ...restFormData,
     });
 
     await newForm.save();
+
+    user.forms.push(newForm._id);
+    await user.save();
 
     res.status(200).json({ message: "Form saved", formId: newForm.formId });
   } catch (error) {
@@ -25,23 +29,47 @@ const saveForm = async (req, res) => {
     res.status(500).json({ error: "Internal Server Error" });
   }
 };
+
 const getForm = async (req, res) => {
   const { formId } = req.params;
 
   try {
-    // find form by formId and createdBy userId
-    const form = await Form.findOne({ formId });
+    // formId нь actual MongoDB _id байж магадгүй
+    let form = await Form.findOne({ formId });
+
+    if (!form && mongoose.Types.ObjectId.isValid(formId)) {
+      form = await Form.findById(formId); // fallback
+    }
+
     if (!form) {
       return res.status(404).json({ error: "Form not found" });
     }
+
     res.status(200).json(form);
   } catch (error) {
     console.error("Get form error:", error);
     res.status(500).json({ error: error.message });
   }
 };
+const getForms = async (req, res) => {
+  const { userId } = req.query;
+  try {
+    if (!userId) {
+      return res.status(400).json({ error: "User ID is required" });
+    }
+
+    const forms = await Form.find({ createdBy: userId });
+
+    res.json({ forms });
+  } catch (error) {
+    console.error("Get form error:", error);
+    res.status(500).json({ error: error.message });
+  }
+};
+
 
 export {
   saveForm,
   getForm,
+  getForms,
 };

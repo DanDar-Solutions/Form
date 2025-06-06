@@ -50,8 +50,8 @@ export async function verifyUser(user) {
 export async function saveForm(userId, formData) {
     try {
         const response = await axios.post(`${URL}/api/forms`, {
-            ...formData,
             createdBy: userId,
+            ...formData,
         });
         return response.data;
     } catch (error) {
@@ -63,11 +63,16 @@ export async function saveForm(userId, formData) {
 export async function getForm(formId) {
     try {
         const response = await axios.get(`${URL}/api/forms/${formId}`);
-        console.log(response.data)
         return response.data;
     } catch (error) {
         const message = error.response?.data?.message || error.message || 'Тодорхойгүй алдаа';
         console.error("Error while fetching form:", message);
         throw new Error(message);
     }
+}
+export async function getForms(userId) {
+  if (!userId) throw new Error("User not found");
+    return axios.get(`${URL}/api/forms`, {
+    params: { userId }
+  });
 }
