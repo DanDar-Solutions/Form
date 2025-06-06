@@ -460,7 +460,7 @@ function PaletteMenu({ onFontChange, onColorChange, onBackgroundColorChange }) {
   );
 }
 
-function Navbar() {
+export default function Navbar() {
   const [formStyles, setFormStyles] = React.useState({
     font: { label: 'Roboto', size: '24' },
     color: '#800080',
@@ -565,9 +565,6 @@ function Navbar() {
           <Link to="/responses/:formId">Responses</Link>
         </li>
         <li>
-          <Link to="/fill/:formId">fill</Link>
-        </li>
-        <li>
           <Link to="/auth">
             <img src={userIcon} alt="User Icon" className="user-icon" />
           </Link>
@@ -576,5 +573,3 @@ function Navbar() {
     </nav>
   );
 }
-
-export default Navbar;

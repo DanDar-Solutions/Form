@@ -1,8 +1,9 @@
+import './index.css';
 import { useEffect, useState } from "react";
 import { Routes, Route } from 'react-router-dom';                // required
-import './index.css';
 
-import Navbar from './components/Navbar/Navbar';                 // components that calling
+// import Navbar from './components/Navbar/Navbar';                 // components that calling
+import Navbar from './components/Navbar/test/tNavbar';
 import CreateForm from './pages/CreateForm/CreateForm';
 import ViewResponses from './pages/ViewResponses/ViewResponses';
 import Auth from './pages/auth/auth';
@@ -17,7 +18,7 @@ function App() {
     const [logged, setLogged] = useState(() => {
       return localStorage.getItem("logged") === "true";
     });
-        
+//////////////////////////////////////////////////////////
     useEffect(() => {
     gsap.registerPlugin(ScrollTrigger, ScrollSmoother);
   
@@ -27,6 +28,7 @@ function App() {
       smooth: 1.5,
       effects: true});
     }, []);
+//////////////////////////////////////////////////////////
   return (
     <>
     <Navbar />
