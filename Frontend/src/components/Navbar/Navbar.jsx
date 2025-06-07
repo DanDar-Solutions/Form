@@ -1,530 +1,279 @@
-import RemoveRedEyeIcon from '@mui/icons-material/RemoveRedEye'; // For Preview/View
-import PaletteIcon from '@mui/icons-material/Palette'; // For Theme/Color
-import { Link, useNavigate } from 'react-router-dom'; // Added useNavigate for navigation
-import './Navbar.css';
-import userIcon from '../../public/default user icon.svg';
-import IconButton from '@mui/material/IconButton';
-import Menu from '@mui/material/Menu';
-import MenuItem from '@mui/material/MenuItem';
-import MoreVertIcon from '@mui/icons-material/MoreVert';
-import ReplayIcon from '@mui/icons-material/Replay'; // For Undo
-import RefreshIcon from '@mui/icons-material/Refresh'; // For Redo
-import Divider from '@mui/material/Divider'; // For separating sections in the menu
-import Dialog from '@mui/material/Dialog'; // For dialogs
-import DialogTitle from '@mui/material/DialogTitle';
-import DialogContent from '@mui/material/DialogContent';
-import DialogActions from '@mui/material/DialogActions';
-import Button from '@mui/material/Button';
-import TextField from '@mui/material/TextField'; // For input fields
-import Table from '@mui/material/Table'; // For shortcuts table
-import TableBody from '@mui/material/TableBody';
-import TableCell from '@mui/material/TableCell';
-import TableContainer from '@mui/material/TableContainer';
-import TableHead from '@mui/material/TableHead';
-import TableRow from '@mui/material/TableRow';
-import Paper from '@mui/material/Paper'; // For table container
-import * as React from 'react';
-import { useReactToPrint } from 'react-to-print';
+import { useState, useReducer, useEffect } from 'react';
+import { Link, useNavigate, useLocation } from 'react-router-dom';
+import './tNavbar.css';
 
-const options = [
-  'Хувилах',
-  'Хогийн сав руу зөөх',
-  'Урьдчилан бөглөх маягт',
-  'HTML оруулах',
-  'Хэвлэх',
-  'Apps Script',
-  'Нэмэлтийг суулгах',
-  'Маягтыг нийтлэхээ болих',
-  'Гарын товчлолууд',
-];
+// SVG Icons
+const UndoIcon = () => (
+  <svg width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+    <path d="M12.5 8C9.85 8 7.45 8.99 5.6 10.6L2 7V16H11L7.38 12.38C8.77 11.22 10.54 10.5 12.5 10.5C16.04 10.5 19.05 12.81 20.1 16L22.47 15.22C21.08 11.03 17.15 8 12.5 8Z" fill="currentColor"/>
+  </svg>
+);
 
-const fontOptions = [
-  { label: 'Roboto', size: '24' },
-  { label: 'Asulit', size: '12' },
-  { label: 'Roboto', size: '11' },
-];
+const RedoIcon = () => (
+  <svg width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+    <path d="M18.4 10.6C16.55 8.99 14.15 8 11.5 8C6.85 8 2.92 11.03 1.54 15.22L3.9 16C4.95 12.81 7.95 10.5 11.5 10.5C13.45 10.5 15.23 11.22 16.62 12.38L13 16H22V7L18.4 10.6Z" fill="currentColor"/>
+  </svg>
+);
 
-const colorOptions = [
-  '#800080', '#FF0000', '#0000FF', '#00FFFF', '#FFA500',
-  '#00FF00', '#808080', '#FFA07A', '#98FB98', '#DDA0DD',
-];
+const PaletteIcon = () => (
+  <svg width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+    <path d="M12 3C7.03 3 3 7.03 3 12C3 16.97 7.03 21 12 21C12.83 21 13.5 20.33 13.5 19.5C13.5 19.11 13.35 18.76 13.11 18.49C12.88 18.23 12.73 17.88 12.73 17.5C12.73 16.67 13.4 16 14.23 16H16C18.76 16 21 13.76 21 11C21 6.58 16.97 3 12 3ZM6.5 12C5.67 12 5 11.33 5 10.5C5 9.67 5.67 9 6.5 9C7.33 9 8 9.67 8 10.5C8 11.33 7.33 12 6.5 12ZM9.5 8C8.67 8 8 7.33 8 6.5C8 5.67 8.67 5 9.5 5C10.33 5 11 5.67 11 6.5C11 7.33 10.33 8 9.5 8ZM14.5 8C13.67 8 13 7.33 13 6.5C13 5.67 13.67 5 14.5 5C15.33 5 16 5.67 16 6.5C16 7.33 15.33 8 14.5 8ZM17.5 12C16.67 12 16 11.33 16 10.5C16 9.67 16.67 9 17.5 9C18.33 9 19 9.67 19 10.5C19 11.33 18.33 12 17.5 12Z" fill="currentColor"/>
+  </svg>
+);
 
-const backgroundColorOptions = [
-  '#E6E6FA', '#D3D3D3', '#FFFFFF',
-];
+const MenuIcon = () => (
+  <svg width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+    <path d="M12 8C13.1 8 14 7.1 14 6C14 4.9 13.1 4 12 4C10.9 4 10 4.9 10 6C10 7.1 10.9 8 12 8ZM12 10C10.9 10 10 10.9 10 12C10 13.1 10.9 14 12 14C13.1 14 14 13.1 14 12C14 10.9 13.1 10 12 10ZM12 16C10.9 16 10 16.9 10 18C10 19.1 10.9 20 12 20C13.1 20 14 19.1 14 18C14 16.9 13.1 16 12 16Z" fill="currentColor"/>
+  </svg>
+);
 
-// Define keyboard shortcuts data
-const shortcuts = [
-  { action: 'Хуулах', shortcut: 'Ctrl + C' },
-  { action: 'Буулгах', shortcut: 'Ctrl + V' },
-  { action: 'Бүгдийг сонгох', shortcut: 'Ctrl + A' },
-  { action: 'Хайх', shortcut: 'Ctrl + F' },
-  { action: 'Хэвлэх', shortcut: 'Ctrl + P' },
-  { action: 'Шинэ таб нээх', shortcut: 'Ctrl + T' },
-  { action: 'Таб хаах', shortcut: 'Ctrl + W' },
-  { action: 'Undo', shortcut: 'Ctrl + Z' },
-  { action: 'Redo', shortcut: 'Ctrl + Y' },
-  { action: 'Табуудыг сэргээх', shortcut: 'Ctrl + Shift + T' },
-];
+const UserIcon = () => (
+  <svg width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+    <path d="M12 12C14.21 12 16 10.21 16 8C16 5.79 14.21 4 12 4C9.79 4 8 5.79 8 8C8 10.21 9.79 12 12 12ZM12 14C9.33 14 4 15.34 4 18V20H20V18C20 15.34 14.67 14 12 14Z" fill="currentColor"/>
+  </svg>
+);
 
-const ITEM_HEIGHT = 48;
-
-function LongMenu({ onDeleteForm }) {
-  const [anchorEl, setAnchorEl] = React.useState(null);
-  const open = Boolean(anchorEl);
-  const [trashDialogOpen, setTrashDialogOpen] = React.useState(false); // State for trash dialog
-  const [htmlDialogOpen, setHtmlDialogOpen] = React.useState(false); // State for HTML dialog
-  const [printDialogOpen, setPrintDialogOpen] = React.useState(false); // State for print dialog
-  const [shortcutsDialogOpen, setShortcutsDialogOpen] = React.useState(false); // State for shortcuts dialog
-  const navigate = useNavigate(); // Hook for navigation
-  const [iframeSrc, setIframeSrc] = React.useState(''); // State for iframe source URL
-  const [iframeWidth, setIframeWidth] = React.useState('640'); // State for iframe width
-  const [iframeHeight, setIframeHeight] = React.useState('691'); // State for iframe height
-  const componentRef = React.useRef(); // Ref for print content
-
-  // Use react-to-print hook
-  const handlePrintAction = useReactToPrint({
-    content: () => componentRef.current,
-    onAfterPrint: () => setPrintDialogOpen(false), // Close dialog after printing
-  });
-
-  const handleClick = (event) => {
-    setAnchorEl(event.currentTarget);
-  };
-  const handleClose = () => {
-    setAnchorEl(null);
-  };
-
-  // Handle moving to trash
+// Options Menu Component
+const OptionsMenu = ({ isOpen, onClose, onDeleteForm }) => {
+  const navigate = useNavigate();
+  
+  if (!isOpen) return null;
+  
   const handleMoveToTrash = () => {
-    setTrashDialogOpen(true);
-    handleClose();
+    if (window.confirm('Энэ маягтыг хогийн саванд хийх үү?')) {
+      onDeleteForm();
+      navigate('/');
+    }
+    onClose();
   };
-
-  // Handle trash dialog close
-  const handleTrashDialogClose = () => {
-    setTrashDialogOpen(false);
-  };
-
-  // Handle restore from trash
-  const handleRestore = () => {
-    console.log('File restored from trash');
-    setTrashDialogOpen(false);
-    // Add your restore logic here
-  };
-
-  // Handle navigate to form home and permanent delete
-  const handleGoToFormHome = () => {
-    onDeleteForm(); // Delete the form
-    setTrashDialogOpen(false);
-    navigate('/'); // Navigate to the home page (adjust the path as needed)
-  };
-
-  // Handle opening HTML dialog
-  const handleInsertHTML = () => {
-    setHtmlDialogOpen(true);
-    handleClose();
-  };
-
-  // Handle HTML dialog close
-  const handleHtmlDialogClose = () => {
-    setHtmlDialogOpen(false);
-    setIframeSrc(''); // Reset iframe src on close
-    setIframeWidth('640'); // Reset width to default
-    setIframeHeight('691'); // Reset height to default
-  };
-
-  // Handle cancel button in HTML dialog
-  const handleCancel = () => {
-    setHtmlDialogOpen(false);
-    setIframeSrc(''); // Reset iframe src on cancel
-    setIframeWidth('640'); // Reset width to default
-    setIframeHeight('691'); // Reset height to default
-  };
-
-  // Handle copy button in HTML dialog
-  const handleCopy = () => {
-    const googleFormUrl = 'https://docs.google.com/forms/d/e/1FAIpQLSeHKI3MUhNfLKLs'; // Example URL
-    setIframeSrc(googleFormUrl);
-    // Simulate copying to clipboard (in a real app, use navigator.clipboard)
-    const iframeCode = `<iframe src="${googleFormUrl}" width="${iframeWidth}" height="${iframeHeight}"></iframe>`;
-    console.log(`Copied iframe code: ${iframeCode}`);
-  };
-
-  // Handle opening print dialog
-  const handlePrint = () => {
-    setPrintDialogOpen(true);
-    handleClose();
-  };
-
-  // Handle cancel print
-  const handleCancelPrint = () => {
-    setPrintDialogOpen(false);
-  };
-
-  // Handle Apps Script button click
-  const handleAppsScript = () => {
-    window.open('https://script.google.com/u/0/home/projects/1TWb-wL4f0bpdcgd2nd5RFo234CMnBQIZ-jwSakoiPGXrOMKz-VdmqRcV/edit', '_blank');
-    handleClose();
-  };
-
-  // Handle opening shortcuts dialog
-  const handleShortcuts = () => {
-    setShortcutsDialogOpen(true);
-    handleClose();
-  };
-
-  // Handle shortcuts dialog close
-  const handleShortcutsDialogClose = () => {
-    setShortcutsDialogOpen(false);
-  };
+  
+  const options = [
+    { label: 'Хувилах', action: () => { alert('Хувилагдлаа'); onClose(); } },
+    { label: 'Хогийн сав руу зөөх', action: handleMoveToTrash },
+    { label: 'Хэвлэх', action: () => { window.print(); onClose(); } },
+    { label: 'Гарын товчлолууд', action: () => { alert('Гарын товчлолууд'); onClose(); } },
+  ];
 
   return (
-    <div>
-      <IconButton
-        aria-label="more"
-        id="long-button"
-        aria-controls={open ? 'long-menu' : undefined}
-        aria-expanded={open ? 'true' : undefined}
-        aria-haspopup="true"
-        onClick={handleClick}
-      >
-        {MoreVertIcon ? <MoreVertIcon /> : 'Menu'} {/* Debug fallback */}
-      </IconButton>
-      <Menu
-        id="long-menu"
-        anchorEl={anchorEl}
-        open={open}
-        onClose={handleClose}
-        slotProps={{
-          paper: {
-            style: {
-              maxHeight: ITEM_HEIGHT * 8.5,
-              width: '30ch',
-            },
-          },
-          list: {
-            'aria-labelledby': 'long-button',
-          },
-        }}
-      >
-        {options.map((option) => (
-          <MenuItem
-            key={option}
-            selected={option === 'Урьдчилан бөглөх маягт'}
-            onClick={() => {
-              if (option === 'Хогийн сав руу зөөх') {
-                handleMoveToTrash();
-              } else if (option === 'HTML оруулах') {
-                handleInsertHTML();
-              } else if (option === 'Хэвлэх') {
-                handlePrint();
-              } else if (option === 'Apps Script') {
-                handleAppsScript();
-              } else if (option === 'Гарын товчлолууд') {
-                handleShortcuts();
-              } else {
-                handleClose();
-              }
-            }}
-          >
-            {option}
-          </MenuItem>
+    <div className="options-menu">
+      <div className="menu-overlay" onClick={onClose}></div>
+      <ul className="menu-items" onClick={(e) => e.stopPropagation()}>
+        {options.map((option, index) => (
+          <li key={index} onClick={option.action}>
+            {option.label}
+          </li>
         ))}
-      </Menu>
-      {/* Trash Dialog */}
-      <Dialog open={trashDialogOpen} onClose={handleTrashDialogClose}>
-        <DialogTitle>Хогийн сав руу зөөсөн</DialogTitle>
-        <DialogContent>
-          <p>Файлыг хогийн сав руу зөөсөн</p>
-          <p>
-            "Гарчиггүй маягт"-г 30 хоногийн дараа үүрд устгана. Хэрэв энэ файлыг хуваалцсан бол хувь нэмэр
-            оруулагчид үүнийг бүрмөсөн устгах хүртэл хуулбарлаж болно.
-          </p>
-          <p>Энэ файланд хандахын тулд хогийн савнаас гаргана уу.</p>
-          <a href="https://support.google.com/drive/answer/2375102?visit_id=638846202952551545-2191110364&p=restore_trash&rd=1#restore_trash">
-            <p>Дэлгэрэнгүй үзэх</p>
-          </a>
-        </DialogContent>
-        <DialogActions>
-          <Button onClick={handleRestore} color="primary">
-            Хогийн савнаас гаргах
-          </Button>
-          <Button onClick={handleGoToFormHome} color="primary" autoFocus>
-            Маягтын нүүр хуудас руу очих
-          </Button>
-        </DialogActions>
-      </Dialog>
-      {/* HTML Dialog */}
-      <Dialog open={htmlDialogOpen} onClose={handleHtmlDialogClose}>
-        <DialogTitle>HTML оруулах</DialogTitle>
-        <DialogContent>
-          {!iframeSrc ? (
-            <div>
-              <p>Дараах iframe-г хуулна уу: <code><iframe src=""></iframe></code></p>
-              <TextField
-                label="Өргөн (px)"
-                value={iframeWidth}
-                onChange={(e) => setIframeWidth(e.target.value)}
-                type="number"
-                margin="normal"
-                fullWidth
-              />
-              <TextField
-                label="Өндөр (px)"
-                value={iframeHeight}
-                onChange={(e) => setIframeHeight(e.target.value)}
-                type="number"
-                margin="normal"
-                fullWidth
-              />
-            </div>
-          ) : (
-            <iframe
-              src={iframeSrc}
-              width={iframeWidth}
-              height={iframeHeight}
-              title="Google Form"
-              style={{ border: 'none' }}
-            >
-              Ачаалж байна…
-            </iframe>
-          )}
-        </DialogContent>
-        <DialogActions>
-          <Button onClick={handleCancel} color="secondary">
-            Цуцлах
-          </Button>
-          <Button onClick={handleCopy} color="primary" autoFocus>
-            Хуулах
-          </Button>
-        </DialogActions>
-      </Dialog>
-      {/* Print Dialog */}
-      <Dialog open={printDialogOpen} onClose={handleCancelPrint}>
-        <DialogTitle>Хэвлэх</DialogTitle>
-        <DialogContent>
-          <div
-            ref={componentRef}
-            style={{ padding: '20px' }}
-          >
-            <h2>Танай Маягтын Мэдээлэл</h2>
-            <p>03:07 PM +08, Thursday, June 05, 2025</p>
-            <p>Зөвхөн энэ хэсэг хэвлэгдэнэ. Dialog-ийн бусад хэсэг хэвлэгдэхгүй.</p>
-          </div>
-        </DialogContent>
-        <DialogActions>
-          <Button onClick={handleCancelPrint} color="secondary">
-            Cancel
-          </Button>
-          <Button onClick={handlePrintAction} color="primary" autoFocus>
-            Print
-          </Button>
-        </DialogActions>
-      </Dialog>
-      {/* Shortcuts Dialog */}
-      <Dialog open={shortcutsDialogOpen} onClose={handleShortcutsDialogClose}>
-        <DialogTitle>Гарын товчлолууд</DialogTitle>
-        <DialogContent>
-          <TableContainer component={Paper}>
-            <Table>
-              <TableHead>
-                <TableRow>
-                  <TableCell>Үйлдэл</TableCell>
-                  <TableCell align="right">Товчлол</TableCell>
-                </TableRow>
-              </TableHead>
-              <TableBody>
-                {shortcuts.map((row) => (
-                  <TableRow key={row.action}>
-                    <TableCell component="th" scope="row">
-                      {row.action}
-                    </TableCell>
-                    <TableCell align="right">{row.shortcut}</TableCell>
-                  </TableRow>
-                ))}
-              </TableBody>
-            </Table>
-          </TableContainer>
-        </DialogContent>
-        <DialogActions>
-          <Button onClick={handleShortcutsDialogClose} color="primary" autoFocus>
-            Хаах
-          </Button>
-        </DialogActions>
-      </Dialog>
+      </ul>
     </div>
   );
-}
+};
 
-function PaletteMenu({ onFontChange, onColorChange, onBackgroundColorChange }) {
-  const [anchorEl, setAnchorEl] = React.useState(null);
-  const open = Boolean(anchorEl);
-  const handleClick = (event) => {
-    setAnchorEl(event.currentTarget);
-  };
-  const handleClose = () => {
-    setAnchorEl(null);
-  };
+// Theme Menu Component
+const ThemeMenu = ({ isOpen, onClose, onBgColorChange }) => {
+  if (!isOpen) return null;
 
-  const handleFontSelect = (font, size) => {
-    onFontChange({ font, size });
-    handleClose();
-  };
+  const bgColors = [
+    { color: '#FFFFFF', label: 'White' },
+    { color: '#F3E5F5', label: 'Lavender' },
+    { color: '#E8EAF6', label: 'Light Blue' },
+    { color: '#E0F2F1', label: 'Mint' },
+    { color: '#FFF8E1', label: 'Cream' },
+    { color: '#FFEBEE', label: 'Light Pink' }
+  ];
+  const fontOptions = ['Roboto', 'Arial', 'Times New Roman', 'Calibri'];
+  const headerSizes = ['24', '28', '32', '36'];
+  const questionSizes = ['12', '14', '16', '18'];
+  const textSizes = ['11', '12', '14', '16'];
+  
+  const [selectedFont, setSelectedFont] = useState('Roboto');
+  const [headerSize, setHeaderSize] = useState('24');
+  const [questionSize, setQuestionSize] = useState('12');
+  const [textSize, setTextSize] = useState('11');
+  const [activeBgColor, setActiveBgColor] = useState('#FFFFFF');
 
-  const handleColorSelect = (color) => {
-    onColorChange(color);
-    handleClose();
-  };
-
-  const handleBackgroundColorSelect = (color) => {
-    onBackgroundColorChange(color);
-    handleClose();
+  const handleBgColorChange = (color) => {
+    setActiveBgColor(color);
+    onBgColorChange(color);
+    // Apply background color directly to the body
+    document.body.style.backgroundColor = color;
+    // Don't close the menu so user can see the change
   };
 
   return (
-    <div>
-      <IconButton
-        aria-label="theme"
-        className="action-icon"
-        onClick={handleClick}
-      >
-        <PaletteIcon />
-      </IconButton>
-      <Menu
-        id="palette-menu"
-        anchorEl={anchorEl}
-        open={open}
-        onClose={handleClose}
-        slotProps={{
-          paper: {
-            style: {
-              width: '250px',
-            },
-          },
-        }}
-      >
-        <div style={{ padding: '8px 16px' }}>
-          <h4 style={{ margin: '0 0 8px 0', fontSize: '14px' }}>ТЕКСТЫН ХЭЛБЭР (Text Style)</h4>
-          {fontOptions.map((option) => (
-            <MenuItem
-              key={`${option.label}-${option.size}`}
-              onClick={() => handleFontSelect(option.label, option.size)}
+    <div className="theme-menu">
+      <div className="menu-overlay" onClick={onClose}></div>
+      <div className="theme-content" onClick={(e) => e.stopPropagation()}>
+        <div className="theme-header">
+          <span>Theme</span>
+          <button className="close-btn" onClick={onClose}>×</button>
+        </div>
+        
+        <h4 className="section-title">Text style</h4>
+        
+        <div className="style-section">
+          <label>Header</label>
+          <div className="font-selectors">
+            <select 
+              className="font-family-select" 
+              value={selectedFont}
+              onChange={(e) => setSelectedFont(e.target.value)}
             >
-              {option.label} - {option.size}
-            </MenuItem>
+              {fontOptions.map(font => (
+                <option key={font} value={font}>{font}</option>
+              ))}
+            </select>
+            
+            <select 
+              className="font-size-select"
+              value={headerSize}
+              onChange={(e) => setHeaderSize(e.target.value)}
+            >
+              {headerSizes.map(size => (
+                <option key={size} value={size}>{size}</option>
+              ))}
+            </select>
+          </div>
+        </div>
+        
+        <div className="style-section">
+          <label>Question</label>
+          <div className="font-selectors">
+            <select 
+              className="font-family-select" 
+              value={selectedFont}
+              onChange={(e) => setSelectedFont(e.target.value)}
+            >
+              {fontOptions.map(font => (
+                <option key={font} value={font}>{font}</option>
+              ))}
+            </select>
+            
+            <select 
+              className="font-size-select"
+              value={questionSize}
+              onChange={(e) => setQuestionSize(e.target.value)}
+            >
+              {questionSizes.map(size => (
+                <option key={size} value={size}>{size}</option>
+              ))}
+            </select>
+          </div>
+        </div>
+        
+        <div className="style-section">
+          <label>Text</label>
+          <div className="font-selectors">
+            <select 
+              className="font-family-select" 
+              value={selectedFont}
+              onChange={(e) => setSelectedFont(e.target.value)}
+            >
+              {fontOptions.map(font => (
+                <option key={font} value={font}>{font}</option>
+              ))}
+            </select>
+            
+            <select 
+              className="font-size-select"
+              value={textSize}
+              onChange={(e) => setTextSize(e.target.value)}
+            >
+              {textSizes.map(size => (
+                <option key={size} value={size}>{size}</option>
+              ))}
+            </select>
+          </div>
+        </div>
+        
+        <div className="style-section">
+          <label>Header</label>
+          <button className="image-select-btn">
+            <span className="image-icon">📷</span>
+            Choose Image
+          </button>
+        </div>
+        
+        <h4 className="section-title">Background</h4>
+        <div className="background-options">
+          {bgColors.map((bgColor, index) => (
+            <button 
+              key={index}
+              className={`bg-btn ${activeBgColor === bgColor.color ? 'active' : ''}`}
+              style={{background: bgColor.color}}
+              onClick={() => handleBgColorChange(bgColor.color)}
+              title={bgColor.label}
+            >
+              {activeBgColor === bgColor.color && <span className="check-mark">✓</span>}
+            </button>
           ))}
         </div>
-        <Divider />
-        <div style={{ padding: '8px 16px' }}>
-          <h4 style={{ margin: '0 0 8px 0', fontSize: '14px' }}>ТОНИЙН ХЭЛБЭР (Color)</h4>
-          <div style={{ display: 'flex', flexWrap: 'wrap', gap: '8px' }}>
-            {colorOptions.map((color) => (
-              <div
-                key={color}
-                style={{
-                  width: '24px',
-                  height: '24px',
-                  backgroundColor: color,
-                  borderRadius: '50%',
-                  cursor: 'pointer',
-                  border: color === '#800080' ? '2px solid black' : '1px solid #ccc',
-                }}
-                onClick={() => handleColorSelect(color)}
-              />
-            ))}
-          </div>
-        </div>
-        <Divider />
-        <div style={{ padding: '8px 16px' }}>
-          <h4 style={{ margin: '0 0 8px 0', fontSize: '14px' }}>ДЭВСГЭР ӨНГӨ (Background Color)</h4>
-          <div style={{ display: 'flex', flexWrap: 'wrap', gap: '8px' }}>
-            {backgroundColorOptions.map((color) => (
-              <div
-                key={color}
-                style={{
-                  width: '24px',
-                  height: '24px',
-                  backgroundColor: color,
-                  borderRadius: '50%',
-                  cursor: 'pointer',
-                  border: color === '#E6E6FA' ? '2px solid black' : '1px solid #ccc',
-                }}
-                onClick={() => handleBackgroundColorSelect(color)}
-              />
-            ))}
-          </div>
-        </div>
-      </Menu>
+      </div>
     </div>
   );
-}
+};
 
-export default function Navbar() {
-  const [formStyles, setFormStyles] = React.useState({
-    font: { label: 'Roboto', size: '24' },
+// Main Navbar Component
+function Navbar() {
+  const [formStyle, setFormStyle] = useState({
     color: '#800080',
-    backgroundColor: '#E6E6FA',
+    backgroundColor: '#FFFFFF'
   });
+  
+  const [history, setHistory] = useState([]);
+  const [redoStack, setRedoStack] = useState([]);
+  
+  const [optionsMenuOpen, setOptionsMenuOpen] = useState(false);
+  const [themeMenuOpen, setThemeMenuOpen] = useState(false);
+  
+  const location = useLocation(); // Get current location
+  const isCreateRoute = location.pathname === '/create'; // Check if current path is /create
 
-  const [history, setHistory] = React.useState([]);
-  const [redoStack, setRedoStack] = React.useState([]);
+  // Apply initial background color on component mount
+  useEffect(() => {
+    if (formStyle.backgroundColor) {
+      document.body.style.backgroundColor = formStyle.backgroundColor;
+    }
+    // Cleanup function to restore original background when component unmounts
+    return () => {
+      document.body.style.backgroundColor = '#f5f5f5';
+    };
+  }, []);
 
-  // Simulate a current form (replace with actual form data in your app)
-  const [currentForm, setCurrentForm] = React.useState({
-    id: 1,
-    title: 'Гарчиггүй маягт',
-  });
-
-  // Function to delete the current form
-  const handleDeleteForm = () => {
-    console.log(`Form ${currentForm.title} (ID: ${currentForm.id}) permanently deleted`);
-    setCurrentForm(null); // Simulate deletion by clearing the form
-    // Add your actual delete logic here (e.g., API call to delete the form)
+  // Handle style changes
+  const updateStyle = (changes) => {
+    setHistory([...history, {...formStyle}]);
+    setRedoStack([]);
+    const newStyle = {...formStyle, ...changes};
+    setFormStyle(newStyle);
+    
+    // Apply background color directly to the body
+    if (changes.backgroundColor) {
+      document.body.style.backgroundColor = changes.backgroundColor;
+    }
   };
-
-  // Deep copy helper to avoid reference issues
-  const deepCopy = (obj) => JSON.parse(JSON.stringify(obj));
-
-  // Style changes handler
-  const updateStyle = (newStyles) => {
-    console.log('Saving to history:', deepCopy(formStyles));
-    setHistory((prev) => [...prev, deepCopy(formStyles)]); // Save current state to history
-    setRedoStack([]); // Clear redo stack on new change
-    setFormStyles((prev) => {
-      const updatedStyles = { ...prev, ...newStyles };
-      console.log('Updated styles:', updatedStyles);
-      return updatedStyles;
-    }); // Update form styles
-  };
-
-  const handleFontChange = (font) => updateStyle({ font });
-  const handleColorChange = (color) => updateStyle({ color });
-  const handleBackgroundColorChange = (backgroundColor) => updateStyle({ backgroundColor });
 
   const handleUndo = () => {
     if (history.length === 0) return;
+    
     const prevStyle = history[history.length - 1];
-    console.log('Undoing to:', prevStyle);
-    setHistory((prev) => prev.slice(0, -1)); // Remove last history entry
-    setRedoStack((prev) => [deepCopy(formStyles), ...prev]); // Add current state to redo stack
-    setFormStyles(prevStyle); // Restore previous state
+    setRedoStack([formStyle, ...redoStack]);
+    setHistory(history.slice(0, -1));
+    setFormStyle(prevStyle);
   };
 
   const handleRedo = () => {
     if (redoStack.length === 0) return;
+    
     const nextStyle = redoStack[0];
-    console.log('Redoing to:', nextStyle);
-    setHistory((prev) => [...prev, deepCopy(formStyles)]); // Add current state to history
-    setRedoStack((prev) => prev.slice(1)); // Remove first redo entry
-    setFormStyles(nextStyle); // Restore next state
+    setHistory([...history, formStyle]);
+    setRedoStack(redoStack.slice(1));
+    setFormStyle(nextStyle);
   };
 
-  // Debug: Log history and redoStack changes
-  React.useEffect(() => {
-    console.log('History:', history);
-    console.log('Redo Stack:', redoStack);
-  }, [history, redoStack]);
+  const handleDeleteForm = () => {
+    console.log('Form deleted');
+    // Add actual delete form logic
+  };
 
   return (
     <nav className="navbar">
@@ -533,30 +282,39 @@ export default function Navbar() {
           <Link to="/">Form clone GANG</Link>
         </div>
         <div className="navbar-actions">
-          <button
-            className="action-button"
-            onClick={handleUndo}
-            disabled={history.length === 0}
-            aria-label="undo"
-          >
-            <ReplayIcon />
-          </button>
-          <button
-            className="action-button"
-            onClick={handleRedo}
-            disabled={redoStack.length === 0}
-            aria-label="redo"
-          >
-            <RefreshIcon />
-          </button>
-          <PaletteMenu
-            onFontChange={handleFontChange}
-            onColorChange={handleColorChange}
-            onBackgroundColorChange={handleBackgroundColorChange}
-          />
-          <LongMenu onDeleteForm={handleDeleteForm} />
+          {isCreateRoute && (
+            <>
+              <button 
+                className="action-button" 
+                onClick={handleUndo} 
+                disabled={history.length === 0}
+              >
+                <UndoIcon />
+              </button>
+              <button 
+                className="action-button" 
+                onClick={handleRedo} 
+                disabled={redoStack.length === 0}
+              >
+                <RedoIcon />
+              </button>
+              <button 
+                className="action-button" 
+                onClick={() => setThemeMenuOpen(true)}
+              >
+                <PaletteIcon />
+              </button>
+              <button 
+                className="action-button" 
+                onClick={() => setOptionsMenuOpen(true)}
+              >
+                <MenuIcon />
+              </button>
+            </>
+          )}
         </div>
       </div>
+      
       <ul className="navLinks">
         <li>
           <Link to="/create">Create Form</Link>
@@ -565,11 +323,32 @@ export default function Navbar() {
           <Link to="/responses/:formId">Responses</Link>
         </li>
         <li>
+          <Link to="/fill/:formId">Fill</Link>
+        </li>
+        <li>
           <Link to="/auth">
-            <img src={userIcon} alt="User Icon" className="user-icon" />
+            <UserIcon />
           </Link>
         </li>
       </ul>
+      
+      {isCreateRoute && (
+        <>
+          <OptionsMenu 
+            isOpen={optionsMenuOpen}
+            onClose={() => setOptionsMenuOpen(false)}
+            onDeleteForm={handleDeleteForm}
+          />
+          
+          <ThemeMenu 
+            isOpen={themeMenuOpen}
+            onClose={() => setThemeMenuOpen(false)}
+            onBgColorChange={(backgroundColor) => updateStyle({backgroundColor})}
+          />
+        </>
+      )}
     </nav>
   );
 }
+
+export default Navbar;
