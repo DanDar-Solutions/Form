@@ -400,3 +400,19 @@
   color: #673AB7;
   font-weight: bold;
 }
+
+
+
+
+.header {
+  font-family: var(--header-font);
+  font-size: var(--header-size);
+}
+.question {
+  font-family: var(--question-font);
+  font-size: var(--question-size);
+}
+.text {
+  font-family: var(--text-font);
+  font-size: var(--text-size);
+}     

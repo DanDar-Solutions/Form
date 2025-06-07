@@ -78,14 +78,29 @@ const ThemeMenu = ({ isOpen, onClose, onBgColorChange }) => {
     { color: '#E8EAF6', label: 'Light Blue' },
     { color: '#E0F2F1', label: 'Mint' },
     { color: '#FFF8E1', label: 'Cream' },
-    { color: '#FFEBEE', label: 'Light Pink' }
+    { color: '#FFEBEE', label: 'Light Pink' },
   ];
-  const fontOptions = ['Roboto', 'Arial', 'Times New Roman', 'Calibri'];
-  const headerSizes = ['24', '28', '32', '36'];
-  const questionSizes = ['12', '14', '16', '18'];
-  const textSizes = ['11', '12', '14', '16'];
-  
-  const [selectedFont, setSelectedFont] = useState('Roboto');
+  const googleFonts = [
+    'Roboto', 'Open Sans', 'Lato', 'Montserrat', 'Oswald', 'Raleway', 'Poppins', 'Merriweather', 'Nunito',
+    'Ubuntu', 'PT Sans', 'Rubik', 'Noto Sans', 'Mukta', 'Inter', 'Quicksand', 'Work Sans', 'Arimo',
+    'Cabin', 'Fira Sans', 'Barlow', 'Source Sans Pro', 'Josefin Sans', 'Hind', 'Karla', 'Oxygen',
+    'Titillium Web', 'Tajawal', 'Manrope', 'Assistant', 'DM Sans', 'Heebo', 'Mulish', 'Lexend',
+    'Cairo', 'Questrial', 'Varela Round', 'Signika', 'Zilla Slab', 'Crimson Text', 'Spectral',
+    'Archivo', 'Space Grotesk', 'Catamaran', 'Exo 2', 'Yanone Kaffeesatz', 'Asap', 'Cormorant Garamond',
+    'Playfair Display', 'Dosis'
+  ];
+
+  const fontOptionsHeader = [...googleFonts];
+  const fontOptionsQuestion = [...googleFonts];
+  const fontOptionsText = [...googleFonts];
+  const headerSizes = ['24', '23', '22', '21', '20', '19', '18'];
+  const questionSizes = ['18', '17', '16', '15', '14', '13', '12'];
+  const textSizes = ['12', '11', '10', '9'];
+
+  // Тус тусдаа state-үүд
+  const [headerFont, setHeaderFont] = useState('Roboto');
+  const [questionFont, setQuestionFont] = useState('Roboto');
+  const [textFont, setTextFont] = useState('Roboto');
   const [headerSize, setHeaderSize] = useState('24');
   const [questionSize, setQuestionSize] = useState('12');
   const [textSize, setTextSize] = useState('11');
@@ -94,10 +109,36 @@ const ThemeMenu = ({ isOpen, onClose, onBgColorChange }) => {
   const handleBgColorChange = (color) => {
     setActiveBgColor(color);
     onBgColorChange(color);
-    // Apply background color directly to the body
     document.body.style.backgroundColor = color;
-    // Don't close the menu so user can see the change
   };
+
+  // Google Fonts динамикаар дуудах
+  useEffect(() => {
+    // Сонгогдсон font-уудыг дуудах
+    const fontsToLoad = [headerFont, questionFont, textFont, ...googleFonts].filter(
+      (font, index, self) => self.indexOf(font) === index
+    );
+    const fontUrl = `https://fonts.googleapis.com/css2?${fontsToLoad
+      .map((font) => `family=${font.replace(' ', '+')}`)
+      .join('&')}&display=swap`;
+    
+    const link = document.createElement('link');
+    link.href = fontUrl;
+    link.rel = 'stylesheet';
+    document.head.appendChild(link);
+
+    // CSS custom properties-г шинэчлэх
+    document.documentElement.style.setProperty('--header-font', `"${headerFont}", sans-serif`);
+    document.documentElement.style.setProperty('--header-size', `${headerSize}px`);
+    document.documentElement.style.setProperty('--question-font', `"${questionFont}", sans-serif`);
+    document.documentElement.style.setProperty('--question-size', `${questionSize}px`);
+    document.documentElement.style.setProperty('--text-font', `"${textFont}", sans-serif`);
+    document.documentElement.style.setProperty('--text-size', `${textSize}px`);
+
+    return () => {
+      document.head.removeChild(link);
+    };
+  }, [headerFont, questionFont, textFont, headerSize, questionSize, textSize]);
 
   return (
     <div className="theme-menu">
@@ -107,84 +148,96 @@ const ThemeMenu = ({ isOpen, onClose, onBgColorChange }) => {
           <span>Theme</span>
           <button className="close-btn" onClick={onClose}>×</button>
         </div>
-        
+
         <h4 className="section-title">Text style</h4>
-        
+
         <div className="style-section">
           <label>Header</label>
           <div className="font-selectors">
-            <select 
-              className="font-family-select" 
-              value={selectedFont}
-              onChange={(e) => setSelectedFont(e.target.value)}
+            <select
+              className="font-family-select"
+              value={headerFont}
+              onChange={(e) => setHeaderFont(e.target.value)}
             >
-              {fontOptions.map(font => (
-                <option key={font} value={font}>{font}</option>
+              {fontOptionsHeader.map((font) => (
+                <option key={font} value={font} style={{ fontFamily: `"${font}", sans-serif` }}>
+                  {font}
+                </option>
               ))}
             </select>
-            
-            <select 
+
+            <select
               className="font-size-select"
               value={headerSize}
               onChange={(e) => setHeaderSize(e.target.value)}
             >
-              {headerSizes.map(size => (
-                <option key={size} value={size}>{size}</option>
+              {headerSizes.map((size) => (
+                <option key={size} value={size}>
+                  {size}
+                </option>
               ))}
             </select>
           </div>
         </div>
-        
+
         <div className="style-section">
           <label>Question</label>
           <div className="font-selectors">
-            <select 
-              className="font-family-select" 
-              value={selectedFont}
-              onChange={(e) => setSelectedFont(e.target.value)}
+            <select
+              className="font-family-select"
+              value={questionFont}
+              onChange={(e) => setQuestionFont(e.target.value)}
             >
-              {fontOptions.map(font => (
-                <option key={font} value={font}>{font}</option>
+              {fontOptionsQuestion.map((font) => (
+                <option key={font} value={font} style={{ fontFamily: `"${font}", sans-serif` }}>
+                  {font}
+                </option>
               ))}
             </select>
-            
-            <select 
+
+            <select
               className="font-size-select"
               value={questionSize}
-              onChange={(e) => setQuestionSize(e.target.value)}
+              onChange={(e) => setQuestionFont(e.target.value)}
             >
-              {questionSizes.map(size => (
-                <option key={size} value={size}>{size}</option>
+              {questionSizes.map((size) => (
+                <option key={size} value={size}>
+                  {size}
+                </option>
               ))}
             </select>
           </div>
         </div>
-        
+
         <div className="style-section">
           <label>Text</label>
           <div className="font-selectors">
-            <select 
-              className="font-family-select" 
-              value={selectedFont}
-              onChange={(e) => setSelectedFont(e.target.value)}
+            <select
+              className="font-family-select"
+              value={textFont}
+              onChange={(e) => setTextFont(e.target.value)}
             >
-              {fontOptions.map(font => (
-                <option key={font} value={font}>{font}</option>
+              {fontOptionsText.map((font) => (
+                <option key={font} value={font} style={{ fontFamily: `"${font}", sans-serif` }}>
+                  {font}
+                </option>
               ))}
             </select>
-            
-            <select 
+
+            <select
               className="font-size-select"
               value={textSize}
               onChange={(e) => setTextSize(e.target.value)}
             >
-              {textSizes.map(size => (
-                <option key={size} value={size}>{size}</option>
+              {textSizes.map((size) => (
+                <option key={size} value={size}>
+                  {size}
+                </option>
               ))}
             </select>
           </div>
         </div>
-        
+
         <div className="style-section">
           <label>Header</label>
           <button className="image-select-btn">
@@ -192,14 +245,14 @@ const ThemeMenu = ({ isOpen, onClose, onBgColorChange }) => {
             Choose Image
           </button>
         </div>
-        
+
         <h4 className="section-title">Background</h4>
         <div className="background-options">
           {bgColors.map((bgColor, index) => (
-            <button 
+            <button
               key={index}
               className={`bg-btn ${activeBgColor === bgColor.color ? 'active' : ''}`}
-              style={{background: bgColor.color}}
+              style={{ background: bgColor.color }}
               onClick={() => handleBgColorChange(bgColor.color)}
               title={bgColor.label}
             >
@@ -351,4 +404,4 @@ function Navbar() {
   );
 }
 
-export default Navbar;
+export default Navbar;     
