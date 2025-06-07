@@ -76,3 +76,14 @@ export async function getForms(userId) {
     params: { userId }
   });
 }
+
+export async function submitFormResponse(formId, responses) {
+  try {
+    const response = await axios.post(`${URL}/api/forms/${formId}/responses`, responses);
+    return response.data;
+  } catch (error) {
+    const message = error.response?.data?.message || error.message || 'Хариултыг хадгалахад алдаа гарлаа';
+    console.error("Error while submitting response:", message);
+    throw new Error(message);
+  }
+}

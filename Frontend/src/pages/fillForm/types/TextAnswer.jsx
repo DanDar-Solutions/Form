@@ -1,18 +1,18 @@
 import React from 'react';
+import styles from '../fillForm.module.css';
 
-export default function Rtype4({ question, userAnswer }) {
-  const isCorrect = userAnswer === question.shortAnswerValue;
-
+export default function TextInput({ question, value, onChange, required = true }) {
   return (
-    <div>
-      <h3>{question.text}</h3>
+    <>
+      <label>{question.text}</label>
       <input
         type="text"
-        placeholder="answer"
-        value={userAnswer}
-        style={{ borderColor: isCorrect ? 'green' : 'red' }}
-        readOnly
+        value={value || ''}
+        onChange={(e) => onChange(e.target.value)}
+        required={required}
+        className={styles.textInput}
+        placeholder={question.placeholder || ''}
       />
-    </div>
+    </>
   );
 }

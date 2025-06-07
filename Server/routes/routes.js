@@ -3,7 +3,8 @@ import { sendVerificationCode, verifyCode, loginUser } from "../controller/authC
 import { 
   saveForm,
   getForm,
-  getForms
+  getForms,
+  submitFormResponse
 } from "../controller/formController.js"
 import {
   allUsers,
@@ -37,6 +38,7 @@ router.post("/auth/login", loginUser);
 router.post("/forms",saveForm)
 router.get("/forms/:formId", getForm)
 router.get("/forms", getForms)
+router.post("/forms/:formId/responses", submitFormResponse)
 
 export default router;
  

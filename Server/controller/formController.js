@@ -1,6 +1,7 @@
 import mongoose from "mongoose";
 import User from "../models/user.model.js";
 import Form from "../models/form.model.js";
+import FormResponse from "../models/formResponse.model.js";
 
 const saveForm = async (req, res) => {
   const { createdBy, formId, ...restFormData } = req.body;
@@ -67,9 +68,40 @@ const getForms = async (req, res) => {
   }
 };
 
+const submitFormResponse = async (req, res) => {
+  const { formId } = req.params;
+  const { responses } = req.body;
+  
+  try {
+    // Check if form exists
+    const form = await Form.findOne({ formId });
+    if (!form) {
+      return res.status(404).json({ error: "Form not found" });
+    }
+
+    // Create the response
+    const newResponse = new FormResponse({
+      formId: form._id,
+      responses: responses,
+      submittedAt: new Date()
+    });
+
+    await newResponse.save();
+    
+    res.status(201).json({ 
+      success: true, 
+      message: "Form response submitted successfully",
+      responseId: newResponse._id
+    });
+  } catch (error) {
+    console.error("Form response submission error:", error);
+    res.status(500).json({ error: "Failed to submit form response" });
+  }
+};
 
 export {
   saveForm,
   getForm,
   getForms,
+  submitFormResponse
 };
