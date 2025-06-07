@@ -1,6 +1,6 @@
 import { useState, useReducer, useEffect } from 'react';
 import { Link, useNavigate, useLocation } from 'react-router-dom';
-import './tNavbar.css';
+import './Navbar.css';
 
 // SVG Icons
 const UndoIcon = () => (

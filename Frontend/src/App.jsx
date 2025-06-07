@@ -1,9 +1,8 @@
 import './index.css';
 import { useEffect, useState } from "react";
-import { Routes, Route } from 'react-router-dom';                // required
+import { Routes, Route } from 'react-router-dom';                // required\
 
-// import Navbar from './components/Navbar/Navbar';                 // components that calling
-import Navbar from './components/Navbar/test/tNavbar';
+import Navbar from './components/Navbar/Navbar';
 import CreateForm from './pages/CreateForm/CreateForm';
 import ViewResponses from './pages/ViewResponses/ViewResponses';
 import Auth from './pages/auth/auth';
