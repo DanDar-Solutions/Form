@@ -1,16 +1,26 @@
-import React, { useState } from "react";                        // no way this is conna work
+import React, { useState } from "react";
 import axios from "axios";
+import "./css/forgotPassword.css";
+import ReCAPTCHA from "react-google-recaptcha";
 
 export default function ForgotPassword({ setNotification }) {
   const [email, setEmail] = useState("");
   const [codeSent, setCodeSent] = useState(false);
   const [code, setCode] = useState("");
+  const [isHuman, setIsHuman] = useState(false); // reCAPTCHA-ын шалгалт
 
-  // Имэйл рүү код илгээх
   const handleSendCode = async () => {
     if (!email.includes("@")) {
       setNotification({
         message: "И-мэйл хаяг буруу байна",
+        type: "error"
+      });
+      return;
+    }
+
+    if (!isHuman) {
+      setNotification({
+        message: "Та reCAPTCHA-г баталгаажуулна уу",
         type: "error"
       });
       return;
@@ -39,7 +49,6 @@ export default function ForgotPassword({ setNotification }) {
     }
   };
 
-  // Код шалгах
   const handleVerifyCode = async () => {
     try {
       const res = await axios.post("http://localhost:8000/api/auth/verify-code", {
@@ -52,7 +61,7 @@ export default function ForgotPassword({ setNotification }) {
           message: "Код зөв байна. Одоо нууц үгээ шинэчилнэ үү.",
           type: "success"
         });
-        // Энд нууц үг солих хуудас руу navigate хийж болно
+        // router navigate here if needed
       } else {
         setNotification({
           message: "Код буруу байна",
@@ -69,8 +78,8 @@ export default function ForgotPassword({ setNotification }) {
   };
 
   return (
-    <div className="p-4">
-      <h1 className="text-xl mb-2">Нууц үг сэргээх</h1>
+    <div className="reset-container">
+      <h1 className="reset-title">Нууц үг сэргээх</h1>
 
       {!codeSent ? (
         <>
@@ -79,10 +88,15 @@ export default function ForgotPassword({ setNotification }) {
             value={email}
             onChange={(e) => setEmail(e.target.value)}
             placeholder="И-мэйл хаяг"
-            className="border p-1 mb-2"
+            className="reset-input"
           />
-          <br />
-          <button onClick={handleSendCode} className="bg-blue-500 text-white p-1 px-4">
+          <div className="captcha-box">
+            <ReCAPTCHA
+              sitekey="6LeBF1QrAAAAAOZmbqeQ-HynhQHy7yGzRKeFJTf1"
+              onChange={() => setIsHuman(true)} // Зөвхөн хүнийг батлах
+            />
+          </div>
+          <button onClick={handleSendCode} className="send-code-button">
             Код илгээх
           </button>
         </>
@@ -93,10 +107,9 @@ export default function ForgotPassword({ setNotification }) {
             value={code}
             onChange={(e) => setCode(e.target.value)}
             placeholder="6 оронтой код оруулна уу"
-            className="border p-1 mb-2"
+            className="reset-input"
           />
-          <br />
-          <button onClick={handleVerifyCode} className="bg-green-500 text-white p-1 px-4">
+          <button onClick={handleVerifyCode} className="verify-code-button">
             Код шалгах
           </button>
         </>

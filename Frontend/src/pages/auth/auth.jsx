@@ -41,7 +41,7 @@ export default function Auth({ setLogged, logged }) {
       <button
         onClick={() => setLogin(!login)}
         className={styles["auth-button"]}
-        style={{ backgroundColor: "#eee", color: "#333", marginTop: "1rem" }}
+        style={{ backgroundColor: "#eee", color: "#333", marginTop: "1rem" ,width: "100%"}}
       >
         {login ? "Already have an account? Login" :  "Need an account? Register"}
       </button>

@@ -2,6 +2,7 @@ import { verifyUser } from "../../../api.js"
 import { useState } from "react"
 import axios from "axios"
 import ReCAPTCHA from "react-google-recaptcha"
+import "./css/login.css"
 
 import Forgotpassword from "./forgotpassword.jsx"                    // component that calling
 
@@ -107,22 +108,50 @@ export default function Login({ setLogged, setNotification }) {
 
 
     return (
-        <div>
-            { !forgotPassword &&
-            <form onSubmit={handleSubmit} className="flex flex-col">
-                <input placeholder={"Email"} onChange={handleChange} name="email" required maxLength={40} className="mb-2"/>
-                <input placeholder={"Password"} onChange={handleChange} name="password" type="password" required maxLength={20} className="mb-2"/>
-                <div className="mb-4">
-                    <ReCAPTCHA
-                        sitekey="6LeBF1QrAAAAAOZmbqeQ-HynhQHy7yGzRKeFJTf1"
-                        onChange={handleCaptchaChange}
-                    />
-                </div>
-                <button type="submit" className="mb-4" >Login</button>
-                <button type="button" onClick={()=> setForgotPassword(true)} className="mb-4">Forgot Password</button>
-            </form>
-}
-            {forgotPassword && <Forgotpassword setNotification={setNotification}/>}
-        </div>
+            <div className="login-container">
+                {!forgotPassword && (
+                    <form onSubmit={handleSubmit} className="login-form">
+                        <input
+                            placeholder="Email"
+                            onChange={handleChange}
+                            name="email"
+                            required
+                            maxLength={40}
+                            className="input-field"
+                        />
+                        <input
+                            placeholder="Password"
+                            onChange={handleChange}
+                            name="password"
+                            type="password"
+                            required
+                            maxLength={20}
+                            className="input-field"
+                        />
+                        <div className="captcha-box">
+                            <ReCAPTCHA
+                                sitekey="6LeBF1QrAAAAAOZmbqeQ-HynhQHy7yGzRKeFJTf1"
+                                onChange={handleCaptchaChange}
+                            />
+                        </div>
+                        <button
+                            type="submit"
+                            className="login-button"
+                        >
+                            Login
+                        </button>
+                        <button
+                            type="button"
+                            onClick={() => setForgotPassword(true)}
+                            className="forgot-password-button"
+                        >
+                            Forgot Password?
+                        </button>
+                    </form>
+                )}
+                {forgotPassword && (
+                    <Forgotpassword setNotification={setNotification} />
+                )}
+            </div>
     )
 }
