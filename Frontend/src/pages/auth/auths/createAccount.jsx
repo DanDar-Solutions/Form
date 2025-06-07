@@ -1,4 +1,3 @@
-import React from 'react'                                    // required things
 import { useState } from "react"
 import { useNavigate } from "react-router-dom"
 import ReCAPTCHA from "react-google-recaptcha"
@@ -89,8 +88,8 @@ export default function CreateAccount({ setNotification }) {
         navigate("/create", { state: { userId: response._id } })
       } else {
         setNotification({
-          message: "Бүртгэл үүсгэж чадсангүй",
-          type: "error"
+          message: "Бүртгэл үүsleeeee",
+          type: "success"
         });
       }
 
