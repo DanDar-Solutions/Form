@@ -7,6 +7,7 @@ export default function Account() {                //profile. users profile.
   const handleLogout = () => {
     sessionStorage.removeItem('User')
     localStorage.removeItem('logged')
+    localStorage.removeItem("User");
     
     navigate('/')
     
