@@ -3,12 +3,12 @@ import axios from "axios";
 const URL = "http://localhost:8000"
 
 export async function getUser(id) {
-    const response = await axios.get(`${URL}/users/${id}`)
-
-    if (response.status === 200) {
-        return response.data
-    } else {
-        return
+    try {
+        const response = await axios.get(`${URL}/api/users/${id}`);
+        return response.data;
+    } catch (error) {
+        console.error("Хэрэглэгчийн мэдээлэл татаж чадсангүй:", error.message);
+        return null;
     }
 }
 
