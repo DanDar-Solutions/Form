@@ -12,6 +12,8 @@ import Home from "./pages/home/home";
 import { ScrollSmoother } from "gsap/ScrollSmoother";           // ari's thing
 import { ScrollTrigger } from "gsap/ScrollTrigger";
 import { gsap } from "gsap";
+gsap.registerPlugin(ScrollTrigger, ScrollSmoother);
+
 
 function App() {
     const [logged, setLogged] = useState(() => {
@@ -19,13 +21,13 @@ function App() {
     });
 //////////////////////////////////////////////////////////
     useEffect(() => {
-    gsap.registerPlugin(ScrollTrigger, ScrollSmoother);
-  
+    // Зөвхөн ScrollSmoother үүсгэх
     ScrollSmoother.create({
       wrapper: "#smooth-wrapper",
       content: "#smooth-content",
       smooth: 1.5,
-      effects: true});
+      effects: true
+    });
     }, []);
 //////////////////////////////////////////////////////////
   return (
