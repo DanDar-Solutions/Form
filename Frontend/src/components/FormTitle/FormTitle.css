@@ -16,6 +16,8 @@
   margin-bottom: 1rem;
   padding: 0.5rem 0;
   border-bottom: 1px solid #e0e0e0;
+  font-family: var(--header-font, 'Roboto', sans-serif);
+  font-size: var(--header-size, 24px);
 }
 
 .descriptionInput {
@@ -25,6 +27,8 @@
   background: transparent;
   font-size: 1rem;
   padding: 0.5rem 0;
+  font-family: var(--text-font, 'Roboto', sans-serif);
+  font-size: var(--text-size, 16px);
 }
 
 .titleInput:focus,
@@ -32,3 +36,15 @@
   outline: none;
   border-bottom-color: #673ab7;
 } 
+
+.titleInput::placeholder {
+  font-family: var(--header-font, 'Roboto', sans-serif);
+  font-size: var(--header-size, 24px);
+  opacity: 0.6;
+}
+
+.descriptionInput::placeholder {
+  font-family: var(--text-font, 'Roboto', sans-serif);
+  font-size: var(--text-size, 16px);
+  opacity: 0.6;
+}

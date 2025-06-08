@@ -12,6 +12,8 @@
   font-size: 14px;
   margin: 0 0 15px 0;
   font-style: italic;
+
+  font-family: var(--text-font, 'Roboto', sans-serif);
 }
 
 .shortAnswerPreview {
@@ -27,4 +29,7 @@
   background-color: #f1f3f4;
   width: 100%;
   max-width: 300px;
+
+  font-family: var(--text-font, 'Roboto', sans-serif);
+  font-size: var(--text-size, '11px');
 } 

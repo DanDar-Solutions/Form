@@ -43,6 +43,7 @@
   cursor: grabbing;
 }
 
+
 .questionInput {
   flex: 1;
   border: none;
@@ -50,11 +51,20 @@
   padding: 0.5rem 0;
   font-size: 1.1rem;
   margin-right: 1rem;
+
+  font-family: var(--question-font, 'Roboto', sans-serif);
+  font-size: var(--question-size, 24px);
 }
 
 .questionInput:focus {
   outline: none;
   border-bottom-color: #673ab7;
+}
+
+.questionInput::placeholder {
+
+
+  color: #9e9e9e;
 }
 
 .typeSelect {
@@ -63,6 +73,8 @@
   border-radius: 4px;
   background-color: #fff;
   margin-right: 1rem;
+
+
 }
 
 .deleteButton {
@@ -78,4 +90,5 @@
 
 .deleteButton:hover {
   background-color: #d32f2f;
-} 
+}
+
