@@ -155,7 +155,7 @@ const ThemeMenu = ({ isOpen, onClose, onBgColorChange }) => {
           <label>Header</label>
           <div className="font-selectors">
             <select
-              className="font-family-select "
+              className="font-family-select"
               value={headerFont}
               onChange={(e) => setHeaderFont(e.target.value)}
             >
@@ -184,7 +184,7 @@ const ThemeMenu = ({ isOpen, onClose, onBgColorChange }) => {
           <label>Question</label>
           <div className="font-selectors">
             <select
-              className="font-family-select question"
+              className="font-family-select"
               value={questionFont}
               onChange={(e) => setQuestionFont(e.target.value)}
             >
@@ -198,7 +198,7 @@ const ThemeMenu = ({ isOpen, onClose, onBgColorChange }) => {
             <select
               className="font-size-select"
               value={questionSize}
-              onChange={(e) => setQuestionSize(e.target.value)} 
+              onChange={(e) => setQuestionFont(e.target.value)}
             >
               {questionSizes.map((size) => (
                 <option key={size} value={size}>
@@ -225,7 +225,7 @@ const ThemeMenu = ({ isOpen, onClose, onBgColorChange }) => {
             </select>
 
             <select
-              className="font-size-select text"
+              className="font-size-select"
               value={textSize}
               onChange={(e) => setTextSize(e.target.value)}
             >
@@ -242,7 +242,6 @@ const ThemeMenu = ({ isOpen, onClose, onBgColorChange }) => {
           <label>Header</label>
           <button className="image-select-btn">
             <span className="image-icon">📷</span>
-
             Choose Image
           </button>
         </div>
