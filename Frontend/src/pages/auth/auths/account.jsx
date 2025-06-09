@@ -3,7 +3,7 @@ import { useNavigate } from 'react-router-dom'
 import { getUser } from "./../../../api"
 import "./css/account.css"
 
-export default function Account() {
+export default function Account(setLogged) {
   const navigate = useNavigate()
   const [userData, setUserData] = useState(null)
 
