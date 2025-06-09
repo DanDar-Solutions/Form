@@ -37,7 +37,14 @@ export default function Home() {
         setLoading(false);
       }
     };
-    
+    const handleDelete = async (formId) => {
+  try {
+    await deleteForm(formId); // сервер рүү устгах хүсэлт явуулна
+    setForms(prevForms => prevForms.filter(form => form._id !== formId)); // локал утгаас хасна
+  } catch (error) {
+    console.error("Delete error:", error);
+  }
+};
     useEffect(() => {
     fetchForms();
   }, []);
@@ -77,7 +84,7 @@ export default function Home() {
                     <div className='buttons-1'>
                       <button className='button-1' onClick={() => navigate(`/fill/${form._id}`)} >Fill</button>
                       <button className='button-2' onClick={() => navigate(`/responses/${form._id}`)} >Responses</button>
-                      <button className='button-del' onClick={() => deleteForm(form._id)} >Delete</button>
+                      <button className='button-del' onClick={() => handleDelete(form._id)} >Delete</button>
                     </div>
                     <div className='buttons-2'>
                       <p className="form-date">
