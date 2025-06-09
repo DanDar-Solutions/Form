@@ -40,7 +40,6 @@ app.post("/verify-captcha", (req, res) => {
   console.log("Direct verify-captcha route hit");
   res.json({ success: true, message: "This is a test endpoint" });
 });
-
 // Request not found
 app.use((req, res) => {
   console.log(`Route not found: ${req.method} ${req.url}`);

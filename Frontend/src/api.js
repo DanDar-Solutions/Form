@@ -70,6 +70,15 @@ export async function getForm(formId) {
         throw new Error(message);
     }
 }
+export async function deleteForm(formId) {
+  try{
+    const response = await axios.delete(`${URL}/api/forms/${formId}`)
+    return response.data
+  }catch(error){
+    console.error("Error while Deleting form:", message);
+    throw new Error(message);
+  }
+}
 export async function getForms(userId) {
   if (!userId) throw new Error("User not found");
     return axios.get(`${URL}/api/forms`, {

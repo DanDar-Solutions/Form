@@ -2,7 +2,7 @@ import { useNavigate } from 'react-router-dom';
 import { useState, useEffect } from 'react';
 import googlePlusIcon from '../../public/googlePlusIcon.png';
 import './home.css';
-import { getForms } from '../../api'; // getForm импорт хийсэн
+import { getForms, deleteForm } from '../../api'; // getForm импорт хийсэн
 
 export default function Home() {
 
@@ -77,7 +77,7 @@ export default function Home() {
                     <div className='buttons-1'>
                       <button className='button-1' onClick={() => navigate(`/fill/${form._id}`)} >Fill</button>
                       <button className='button-2' onClick={() => navigate(`/responses/${form._id}`)} >Responses</button>
-                      <button className='button-del' onClick={() => null} >Delete</button>
+                      <button className='button-del' onClick={() => deleteForm(form._id)} >Delete</button>
                     </div>
                     <div className='buttons-2'>
                       <p className="form-date">
