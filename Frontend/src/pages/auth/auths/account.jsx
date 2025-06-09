@@ -1,6 +1,7 @@
 import React, { useEffect, useState } from 'react'
 import { useNavigate } from 'react-router-dom'
 import { getUser } from "./../../../api"
+import "./css/account.css"
 
 export default function Account() {
   const navigate = useNavigate()
@@ -33,29 +34,22 @@ export default function Account() {
   }, [navigate])
 
   return (
-    <div>
-      <h2>Хэрэглэгчийн хуудас</h2>
-      {userData ? (
-        <div>
-          <p>Нэр: {userData.name}</p>
-          <p>И-мэйл: {userData.email}</p>
-          {/* Хүсвэл өөр мэдээлэл нэм */}
-        </div>
-      ) : (
-        <p>Уншиж байна...</p>
-      )}
-
-      <button onClick={handleLogout} style={{ 
-        padding: '10px 20px', 
-        backgroundColor: '#e53e3e', 
-        color: 'white', 
-        border: 'none',
-        borderRadius: '4px',
-        cursor: 'pointer',
-        marginTop: '20px'
-      }}>
-        Гарах
-      </button>
+    <div className="user-page">
+  <h2 className="user-heading">Хэрэглэгчийн хуудас</h2>
+  {userData ? (
+    <div className="user-info">
+      <p className="user-name">Нэр: {userData.name}</p>
+      <p className="user-email">И-мэйл: {userData.email}</p>
+      {/* Хүсвэл өөр мэдээлэл нэм */}
     </div>
+  ) : (
+    <p className="loading-text">Уншиж байна...</p>
+  )}
+
+  <button onClick={handleLogout} className="logout-button">
+    Гарах
+  </button>
+</div>
+
   )
 }
