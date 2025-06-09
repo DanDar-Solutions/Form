@@ -98,7 +98,16 @@ function QuestionInput({ id, question, onQuestionChange, onDelete, dragHandle })
       {questionType === 'connect' && (
         <Connect 
           options={question.connectOptions || {left: [], right: []}}
-          onChange={(connectOptions) => onQuestionChange({ ...question, connectOptions })}
+          onChange={(connectOptions) => {
+            onQuestionChange({ 
+              ...question, 
+              connectOptions,
+              leftItems: connectOptions.left,
+              rightItems: connectOptions.right,
+              options: [JSON.stringify(connectOptions)]
+            });
+            console.log("Updated connect question with options:", connectOptions);
+          }}
         />
       )}
       

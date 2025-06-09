@@ -4,7 +4,7 @@ import styles from './fillForm.module.css';
 import useForm from '../../hooks/useForm';
 
 // Import question type components
-import Connect from "./types/Connect";
+import Connect from "./types/connect/Connect";
 import Swap from "./types/Swap";
 import MultipleChoiceGrid from "./types/MultipleChoiceGrid";
 import TextInput from "./types/TextAnswer";
