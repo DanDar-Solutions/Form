@@ -7,70 +7,111 @@ import SortableItem from './SortableItem';
 export default function Swap({ question, value, onChange }) {
   // Parse items from question data or use defaults
   const [items, setItems] = useState([]);
+  
+  console.log("Swap component received question:", question);
+  console.log("Current value:", value);
 
   useEffect(() => {
-    // Try to parse items from question.options if available
     let initialItems = [];
     
-    if (Array.isArray(question.options) && question.options.length > 0) {
-      // Process each option and extract its text/value
+    if (question.swapOptions && Array.isArray(question.swapOptions) && question.swapOptions.length > 0) {
+      initialItems = question.swapOptions.map((item, index) => ({
+        id: item.id || `item-${index}`,
+        text: item.text || String(item || '')
+      }));
+      console.log("Using swapOptions:", initialItems);
+    }
+    // check for stondorrd
+    else if (Array.isArray(question.options) && question.options.length > 0) {
       initialItems = question.options.map((option, index) => {
-        // If option is a string that looks like JSON, try to parse it
-        if (typeof option === 'string' && option.startsWith('{')) {
-          try {
-            const parsed = JSON.parse(option);
-            return {
-              id: parsed.id || `item-${index}`,
-              text: parsed.text || option
-            };
-          } catch (e) {
-            // If parsing fails, use the string as is
-            return { id: `item-${index}`, text: option };
-          }
-        } 
-        // If option is an object with text property
-        else if (typeof option === 'object' && option && option.text) {
+        // If option object+text do thiss
+        if (typeof option === 'object' && option !== null && option.text) {
           return {
             id: option.id || `item-${index}`,
             text: option.text
           };
+        } 
+        // If option string doo thiss
+        else if (typeof option === 'string') {
+          if (option.startsWith('{') || option.startsWith('[')) {
+            try {
+              const parsed = JSON.parse(option);
+              if (parsed && (typeof parsed === 'object')) {
+                return {
+                  id: `item-${index}`,
+                  text: parsed.text || String(parsed)
+                };
+              }
+            } catch (e) {
+              // if cant regonize just dooo ittt NIKE
+            }
+          }
+          // string as is?
+          return { id: `item-${index}`, text: option };
         }
-        // Default case, use the option as is
+        // Default
         else {
           return { id: `item-${index}`, text: String(option || '') };
         }
       });
-    } 
-    // If no options, create dummy items from the question text
-    else if (question.text) {
-      const words = question.text.split(' ');
-      initialItems = words.filter(word => word.trim()).map((word, index) => ({
-        id: `item-${index}`,
-        text: word.trim()
-      }));
+      console.log("Using options array:", initialItems);
     }
-    // Otherwise, use a default set if nothing available
-    else {
+    // check for text content
+    else if (question.text) {
+      // Look for num or words in txt
+      const textMatches = question.text.match(/\b(\d+|[a-zA-Z]+)\b/g);
+      if (textMatches && textMatches.length > 0) {
+        initialItems = textMatches.map((match, index) => ({
+          id: `item-${index}`,
+          text: match
+        }));
+      }
+      console.log("Extracted from text:", initialItems);
+    }
+    
+    // If we still don't have items use gods plan
+    if (initialItems.length === 0) {
       initialItems = [
-        { id: 'item-0', text: '3' },
+        { id: 'item-0', text: '1' },
         { id: 'item-1', text: '2' },
-        { id: 'item-2', text: '1' }
+        { id: 'item-2', text: '3' },
+        { id: 'item-3', text: '4' }
       ];
+      console.log("Using default items:", initialItems);
+    }
+    
+    if (Array.isArray(value) && value.length > 0 && value.length === initialItems.length) {
+      try {
+        // Create new array mapping value ID
+        const orderedItems = [];
+        value.forEach(id => {
+          const item = initialItems.find(item => item.id === id);
+          if (item) {
+            orderedItems.push(item);
+          }
+        });
+        
+        // If map ok ordered array ok
+        if (orderedItems.length === initialItems.length) {
+          initialItems = orderedItems;
+          console.log("Reordered items based on value:", initialItems);
+        }
+      } catch (e) {
+        console.error("Error reordering items:", e);
+      }
+    } else {
+      // first var uf not setit
+      onChange(initialItems.map(item => item.id));
     }
     
     setItems(initialItems);
-    
-    // Set initial value if not already set
-    if (!value || !Array.isArray(value) || value.length !== initialItems.length) {
-      onChange(initialItems.map(item => item.id));
-    }
-  }, [question]);
+  }, [question, value, onChange]);
 
   // DnD sensors
   const sensors = useSensors(
     useSensor(PointerSensor, {
       activationConstraint: {
-        distance: 8,
+        distance: 5, //drag distnce
       },
     }),
     useSensor(KeyboardSensor, {
@@ -78,20 +119,26 @@ export default function Swap({ question, value, onChange }) {
     })
   );
 
-  // Handle drag end
   const handleDragEnd = (event) => {
     const { active, over } = event;
     
     if (active.id !== over.id) {
+      console.log(`Dragged item ${active.id} over ${over.id}`);
+      
       setItems((currentItems) => {
         const oldIndex = currentItems.findIndex(item => item.id === active.id);
         const newIndex = currentItems.findIndex(item => item.id === over.id);
         
+        console.log(`Moving from index ${oldIndex} to ${newIndex}`);
+        
         const newItems = arrayMove(currentItems, oldIndex, newIndex);
         
-        // Update the value
-        const newOrder = newItems.map(item => item.id);
-        onChange(newOrder);
+        const newOrder = newItems.map(item => item.id); // up value
+        console.log("New order:", newOrder);
+        
+        setTimeout(() => {
+          onChange(newOrder);
+        }, 0);
         
         return newItems;
       });
@@ -102,7 +149,7 @@ export default function Swap({ question, value, onChange }) {
     <div className="swap-container">
       <p>{question.text}</p>
       
-      <div className="swap-items-container">
+      <div className="swap-items-container" style={{padding: '10px 0'}}>
         <DndContext 
           sensors={sensors}
           collisionDetection={closestCenter}

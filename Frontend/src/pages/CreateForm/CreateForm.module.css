@@ -86,5 +86,5 @@
   cursor: pointer;
   font-weight: 500;
   transition: background-color 0.2s;
-  margin-left: 0.5rem;
+  margin-left: 23rem; /* 23-aas dehse max bolcin 23 max */
 }

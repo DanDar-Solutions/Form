@@ -95,10 +95,17 @@ function QuestionInput({ id, question, onQuestionChange, onDelete, dragHandle })
         />
       )}
       
-      {questionType === 'swap' && (
+      {questionType === 'swap' && ( //yooooooooooooooooo 1 30min sula zugrl ene bdgsh
         <Swap 
           options={question.swapOptions || []}
-          onChange={(swapOptions) => onQuestionChange({ ...question, swapOptions })}
+          onChange={(swapOptions) => {
+            onQuestionChange({ 
+              ...question, 
+              swapOptions, 
+              options: swapOptions
+            });
+            console.log("Updated swap question with options:", swapOptions);
+          }}
         />
       )}
     </div>

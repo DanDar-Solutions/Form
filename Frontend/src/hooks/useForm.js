@@ -121,12 +121,56 @@ const useForm = (formId) => {
         }
       }
       else if (q.type === 'swap') {
-        // For swap questions, try to preserve the needed structure
-        normalizedQuestion.options = q.options || [];
+        // Improved swap question normalization
+        console.log("Normalizing swap question:", q);
         
-        if (q.items) {
-          normalizedQuestion.items = q.items;
+        // Prepare options array
+        let swapOptions = [];
+        
+        // Case 1: If the question has an items array, use that directly
+        if (Array.isArray(q.items) && q.items.length > 0) {
+          swapOptions = q.items.map((item, i) => {
+            if (typeof item === 'object' && item !== null) {
+              return item;
+            } else {
+              return { id: `item-${i}`, text: String(item) };
+            }
+          });
+          normalizedQuestion.items = swapOptions;
         }
+        // Case 2: If the question has options, convert them to proper format
+        else if (Array.isArray(q.options) && q.options.length > 0) {
+          swapOptions = q.options.map((opt, i) => {
+            if (typeof opt === 'object' && opt !== null) {
+              return opt;
+            } else {
+              return { id: `item-${i}`, text: String(opt) };
+            }
+          });
+        }
+        // Case 3: Try to extract numbers or values from the question text
+        else if (q.text) {
+          const matches = q.text.match(/\b(\d+|[a-zA-Z]+)\b/g);
+          if (matches && matches.length > 0) {
+            swapOptions = matches.map((match, i) => ({
+              id: `item-${i}`,
+              text: match
+            }));
+          }
+        }
+        
+        // If we still don't have options, create default ones
+        if (swapOptions.length === 0) {
+          swapOptions = [
+            { id: 'item-0', text: '1' },
+            { id: 'item-1', text: '2' },
+            { id: 'item-2', text: '3' },
+            { id: 'item-3', text: '4' }
+          ];
+        }
+        
+        normalizedQuestion.options = swapOptions;
+        console.log("Normalized swap options:", swapOptions);
       }
       else {
         // For standard questions (text, radio, checkbox), normalize options

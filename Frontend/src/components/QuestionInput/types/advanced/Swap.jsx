@@ -11,8 +11,22 @@ export default function Swap({ options = [], onChange }) {
     }
   }, [options]);
   
+  // Initialize with default items if empty
+  useEffect(() => {
+    if (items.length === 0) {
+      const defaultItems = [
+        { id: `item-${Date.now()}-1`, text: '1' },
+        { id: `item-${Date.now()}-2`, text: '2' },
+        { id: `item-${Date.now()}-3`, text: '3' },
+        { id: `item-${Date.now()}-4`, text: '4' }
+      ];
+      setItems(defaultItems);
+      onChange(defaultItems);
+    }
+  }, []);
+  
   const addItem = () => {
-    const newItems = [...items, { id: Date.now(), text: '' }];
+    const newItems = [...items, { id: `item-${Date.now()}`, text: '' }];
     setItems(newItems);
     onChange(newItems);
   };
@@ -53,6 +67,9 @@ export default function Swap({ options = [], onChange }) {
     setItems(newItems);
     onChange(newItems);
     setDraggedItem(null);
+    
+    // Log for debugging
+    console.log("Draggable item", draggedItem, "was dropped over droppable area", targetId);
   };
   
   return (
@@ -88,8 +105,6 @@ export default function Swap({ options = [], onChange }) {
           </div>
         ))}
       </div>
-
-      {/* aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa */}
       
       <button className="addButton" onClick={addItem}>
         Add Item
