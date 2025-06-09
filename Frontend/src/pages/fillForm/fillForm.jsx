@@ -74,20 +74,6 @@ export default function FillForm() {
       {children}
     </div>
   );
-
-  // Handle standard input types
-  const renderInput = (question, index, type) => {
-    const questionId = question.id || `q-${index}`;
-    return (
-      <QuestionWrapper question={question}>
-        <TextInput 
-          question={question} 
-          value={responses[questionId] || ''}
-          onChange={(value) => handleResponseChange(questionId, value)}
-        />
-      </QuestionWrapper>
-    );
-  };
   
   // Handle checkbox options
   const renderCheckboxOptions = (question, index) => {
@@ -132,13 +118,20 @@ export default function FillForm() {
     const questionId = question.id || `q-${index}`;
     
     switch(question.type) {
-      case 'text':
-        return renderInput(question, index, 'text');
       case 'date':
+        return (
+          <QuestionWrapper question={question}>
+            <Date
+              question={question} 
+              value={responses[questionId] || ''}
+              onChange={(value) => handleResponseChange(questionId, value)}
+            />
+          </QuestionWrapper>
+        );
       case 'time':
         return (
           <QuestionWrapper question={question}>
-            <TextInput 
+            <Time
               question={question} 
               value={responses[questionId] || ''}
               onChange={(value) => handleResponseChange(questionId, value)}

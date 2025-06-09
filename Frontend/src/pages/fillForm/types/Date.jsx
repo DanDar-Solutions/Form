@@ -1,7 +1,20 @@
-import React from 'react'
+import React from 'react';
+import styles from '../fillForm.module.css';
 
-export default function Rtype6() {
+export default function Date({ question, value, onChange }) {
   return (
-    <div>Rtype6</div>
-  )
+    <div className={styles.questionType}>
+      <label className={styles.questionLabel}>{question.text}</label>
+      <div className={styles.dateInputContainer}>
+        <p>Select a date:</p>
+        <input 
+          type="date" 
+          className={styles.dateInput}
+          value={value || ''}
+          onChange={(e) => onChange(e.target.value)}
+          placeholder="mm/dd/yyyy"
+        />
+      </div>
+    </div>
+  );
 }
