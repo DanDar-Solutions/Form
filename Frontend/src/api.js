@@ -104,3 +104,12 @@ export async function getFormResponse(formId) {
   catch(error){ throw error};
   
 }
+export async function verifyCaptcha(token) {
+  try {
+    const response = await axios.post(`${URL}/api/verify-captcha`, { token });
+    return response.data.success;
+  } catch (error) {
+    console.error("verifyCaptcha алдаа:", error.response ? error.response.data : error.message);
+    return false;
+  }
+}

@@ -2,80 +2,102 @@ import React, { useState } from "react";
 import axios from "axios";
 import "./css/forgotPassword.css";
 import ReCAPTCHA from "react-google-recaptcha";
+import { sendVerificationCode, verifyCode, verifyCaptcha } from "../../../api";
 
 export default function ForgotPassword({ setNotification }) {
   const [email, setEmail] = useState("");
   const [codeSent, setCodeSent] = useState(false);
   const [code, setCode] = useState("");
-  const [isHuman, setIsHuman] = useState(false); // reCAPTCHA-ын шалгалт
+  const [captchaToken, setCaptchaToken] = useState(null);
+const isValidEmail = (email) => /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email);
+
+  const handleCaptchaChange = (token) => {
+    console.log("Received reCAPTCHA token:", token);
+    setCaptchaToken(token);
+  };
 
   const handleSendCode = async () => {
-    if (!email.includes("@")) {
+  if (!isValidEmail(email)) {
+  setNotification({
+    message: "И-мэйл хаяг буруу байна",
+    type: "error"
+  });
+  return;
+}
+
+  if (!captchaToken) {
+    setNotification({
+      message: "Та reCAPTCHA-г баталгаажуулна уу",
+      type: "error"
+    });
+    return;
+  }
+
+  try {
+    const verifyRes = await verifyCaptcha(captchaToken);
+    if (!verifyRes) {
       setNotification({
-        message: "И-мэйл хаяг буруу байна",
+        message: "reCAPTCHA шалгалт амжилтгүй боллоо",
         type: "error"
       });
       return;
     }
+  } catch (err) {
+    console.error("CAPTCHA verification error:", err);
+    setNotification({
+      message: "reCAPTCHA баталгаажуулах үед алдаа гарлаа",
+      type: "error"
+    });
+    return;
+  }
 
-    if (!isHuman) {
+  try {
+    const res = await sendVerificationCode(email);
+    if (res.data.success) {
+      setCodeSent(true);
       setNotification({
-        message: "Та reCAPTCHA-г баталгаажуулна уу",
-        type: "error"
+        message: "Код амжилттай илгээгдлээ. Имэйлээ шалгаарай.",
+        type: "success"
       });
-      return;
-    }
-
-    try {
-      const res = await axios.post("http://localhost:8000/api/auth/send-code", { email });
-      if (res.data.success) {
-        setCodeSent(true);
-        setNotification({
-          message: "Код амжилттай илгээгдлээ. Имэйлээ шалгаарай.",
-          type: "success"
-        });
-      } else {
-        setNotification({
-          message: "Код илгээхэд алдаа гарлаа",
-          type: "error"
-        });
-      }
-    } catch (err) {
-      console.error(err);
+    } else {
       setNotification({
-        message: "Сервертэй холбогдоход алдаа гарлаа",
+        message: "Код илгээхэд алдаа гарлаа",
         type: "error"
       });
     }
-  };
+  } catch (err) {
+    console.error(err);
+    setNotification({
+      message: "Сервертэй холбогдоход алдаа гарлаа",
+      type: "error"
+    });
+  }
+};
 
-  const handleVerifyCode = async () => {
-    try {
-      const res = await axios.post("http://localhost:8000/api/auth/verify-code", {
-        email: email,
-        code: code,
-      });
-
-      if (res.data.success) {
-        setNotification({
-          message: "Код зөв байна. Одоо нууц үгээ шинэчилнэ үү.",
-          type: "success"
-        });
-        // router navigate here if needed
-      } else {
-        setNotification({
-          message: "Код буруу байна",
-          type: "error"
-        });
-      }
-    } catch (err) {
-      console.error(err);
+const handleVerifyCode = async () => {
+  try {
+    const res = await verifyCode(email, code);
+    if (res.data.success) {
       setNotification({
-        message: "Сервертэй холбогдоход алдаа гарлаа",
+        message: "Код зөв байна. Одоо нууц үгээ шинэчилнэ үү.",
+        type: "success"
+      });
+      // router navigate here if needed
+    } else {
+      setNotification({
+        message: "Код буруу байна",
         type: "error"
       });
     }
-  };
+  } catch (err) {
+    console.error(err);
+    setNotification({
+      message: "Сервертэй холбогдоход алдаа гарлаа",
+      type: "error"
+    });
+  }
+};
+
 
   return (
     <div className="reset-container">
@@ -93,7 +115,7 @@ export default function ForgotPassword({ setNotification }) {
           <div className="captcha-box">
             <ReCAPTCHA
               sitekey="6LeBF1QrAAAAAOZmbqeQ-HynhQHy7yGzRKeFJTf1"
-              onChange={() => setIsHuman(true)} // Зөвхөн хүнийг батлах
+              onChange={handleCaptchaChange}
             />
           </div>
           <button onClick={handleSendCode} className="send-code-button">
