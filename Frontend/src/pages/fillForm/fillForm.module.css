@@ -2,7 +2,7 @@
   max-width: 800px;
   margin: 40px auto;
   padding: 20px;
-  background-color: #fff;
+  background-color: #f0f2fa;
   border-radius: 8px;
   box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
 }
@@ -10,8 +10,10 @@
 .formHeader {
   text-align: center;
   margin-bottom: 30px;
-  padding-bottom: 20px;
-  border-bottom: 1px solid #eee;
+  padding: 20px;
+  background-color: white;
+  border-radius: 8px;
+  border-top: 8px solid #673ab7;
 }
 
 .formHeader h1 {
@@ -28,7 +30,24 @@
 .questionsContainer {
   display: flex;
   flex-direction: column;
-  gap: 20px;
+  gap: 24px;
+}
+
+.questionContainer {
+  margin-bottom: 24px;
+  background-color: white;
+  padding: 20px;
+  border-radius: 8px;
+  position: relative;
+  transition: box-shadow 0.3s ease;
+}
+
+.questionContainer:hover {
+  box-shadow: 0 3px 8px rgba(0, 0, 0, 0.15);
+}
+
+.questionContainer:last-child {
+  margin-bottom: 0;
 }
 
 .questionCard {
@@ -64,6 +83,7 @@
   font-weight: 500;
   margin-bottom: 12px;
   font-size: 18px;
+  color: #444;
 }
 
 .textInput,
@@ -87,14 +107,14 @@
 .optionsContainer {
   display: flex;
   flex-direction: column;
-  gap: 8px;
+  gap: 10px;
 }
 
 .radioOption,
 .checkboxOption {
   display: flex;
   align-items: center;
-  padding: 10px;
+  padding: 12px;
   background: white;
   border-radius: 4px;
   border: 1px solid #eee;
@@ -104,6 +124,7 @@
 .radioOption:hover,
 .checkboxOption:hover {
   border-color: #5c6bc0;
+  background-color: #f7f8fd;
 }
 
 .radioOption input[type="radio"],
@@ -120,10 +141,10 @@
 
 .connectContainer,
 .swapContainer {
-  background-color: #f0f0f0;
+  background-color: #f7f8fd;
   border-radius: 4px;
-  padding: 12px;
-  margin-top: 8px;
+  padding: 16px;
+  margin-top: 12px;
 }
 
 .connectContainer h4,
@@ -182,6 +203,7 @@
   background-color: #fff;
   border-radius: 4px;
   padding: 15px;
+  box-shadow: 0 1px 2px rgba(0, 0, 0, 0.05);
 }
 
 .gridContainer p {
@@ -296,9 +318,16 @@
   justify-content: center;
 }
 
+.submitContainer {
+  margin-top: 30px;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
 .submitButton {
   padding: 12px 30px;
-  background-color: #5c6bc0;
+  background-color: #673ab7;
   color: white;
   border: none;
   border-radius: 4px;
@@ -309,7 +338,7 @@
 }
 
 .submitButton:hover {
-  background-color: #4a59a9;
+  background-color: #5e35b1;
   transform: translateY(-2px);
 }
 
