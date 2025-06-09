@@ -84,7 +84,14 @@ function QuestionInput({ id, question, onQuestionChange, onDelete, dragHandle })
       {questionType === 'grid' && (
         <MultipleChoiceGrid 
           options={question.gridOptions || {rows: [], columns: []}}
-          onChange={(gridOptions) => onQuestionChange({ ...question, gridOptions })}
+          onChange={(gridOptions) => {
+            onQuestionChange({ 
+              ...question, 
+              gridOptions,
+              options: [JSON.stringify(gridOptions)]
+            });
+            console.log("Updated grid question with options:", gridOptions);
+          }}
         />
       )}
       
@@ -95,7 +102,7 @@ function QuestionInput({ id, question, onQuestionChange, onDelete, dragHandle })
         />
       )}
       
-      {questionType === 'swap' && ( //yooooooooooooooooo 1 30min sula zugrl ene bdgsh
+      {questionType === 'swap' && (
         <Swap 
           options={question.swapOptions || []}
           onChange={(swapOptions) => {

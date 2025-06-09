@@ -7,15 +7,35 @@ export default function MultipleChoiceGrid({ question, value, onChange }) {
     columns: [],
     selections: {}
   });
+  
+  console.log("MultipleChoiceGrid received question:", question);
+  console.log("Current value:", value);
 
   useEffect(() => {
     try {
-      console.log("MultipleChoiceGrid received question:", question);
       let rows = [];
       let columns = [];
       
+      // First check gridOptions from input/ceate yuc gehi
+      if (question.gridOptions && typeof question.gridOptions === 'object') {
+        console.log("Found gridOptions:", question.gridOptions);
+        
+        if (Array.isArray(question.gridOptions.rows)) {
+          rows = question.gridOptions.rows.map((row, index) => ({
+            id: row.id || `row-${index}`,
+            text: row.text || String(row || '')
+          }));
+        }
+        
+        if (Array.isArray(question.gridOptions.columns)) {
+          columns = question.gridOptions.columns.map((col, index) => ({
+            id: col.id || `col-${index}`,
+            text: col.text || String(col || '')
+          }));
+        }
+      }
       // Try to extract grid data from question
-      if (question.gridData && 
+      else if (question.gridData && 
           Array.isArray(question.gridData.rows) && 
           Array.isArray(question.gridData.columns)) {
         
@@ -96,20 +116,41 @@ export default function MultipleChoiceGrid({ question, value, onChange }) {
       // Use fallback demo data if needed
       if (rows.length === 0 || columns.length === 0) {
         console.log("Using fallback data for MultipleChoiceGrid");
-        rows = [
-          { id: 'row-0', text: 'Quality' },
-          { id: 'row-1', text: 'Price' },
-          { id: 'row-2', text: 'Service' }
-        ];
         
-        columns = [
-          { id: 'col-0', text: 'Poor' },
-          { id: 'col-1', text: 'Fair' },
-          { id: 'col-2', text: 'Good' },
-          { id: 'col-3', text: 'Excellent' }
-        ];
+        // Try to extract row and column data from question text
+        if (question.text) {
+          const textLines = question.text.split('\n').map(line => line.trim()).filter(line => line);
+          if (textLines.length >= 2) {
+            // Try to find number/letter patterns common in grid questions
+            const rowMatches = question.text.match(/\b([0-9]+|[a-zA-Z])\b/g);
+            if (rowMatches && rowMatches.length > 0) {
+              rows = rowMatches.slice(0, 3).map((match, index) => ({ 
+                id: `row-${index}`, 
+                text: match.trim() 
+              }));
+            }
+          }
+        }
+        
+        // no data no problem use def hahahahhahah
+        if (rows.length === 0) {
+          rows = [
+            { id: 'row-0', text: 'Quality' },
+            { id: 'row-1', text: 'Price' },
+            { id: 'row-2', text: 'Service' }
+          ];
+        }
+        
+        if (columns.length === 0) {
+          columns = [
+            { id: 'col-0', text: 'Poor' },
+            { id: 'col-1', text: 'Fair' },
+            { id: 'col-2', text: 'Good' },
+            { id: 'col-3', text: 'Excellent' }
+          ];
+        }
       }
-      
+      /////////////////////////////////////////////
       console.log("Processed grid data:", { rows, columns });
       
       // Initialize selections from value or empty object
@@ -133,7 +174,7 @@ export default function MultipleChoiceGrid({ question, value, onChange }) {
         selections: {}
       });
     }
-  }, [question]);
+  }, [question, value]);
 
   // Handle radio button selection
   const handleSelect = (rowId, colId) => {
