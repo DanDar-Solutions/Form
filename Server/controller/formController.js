@@ -98,10 +98,26 @@ const submitFormResponse = async (req, res) => {
     res.status(500).json({ error: "Failed to submit form response" });
   }
 };
+const deleteForm = async (req, res) => {
+  const { formId } = req.params;
 
+  try {
+    const deleted = await Form.findByIdAndDelete(formId);
+
+    if (!deleted) {
+      return res.status(404).json({ error: "Form not found" });
+    }
+
+    res.json({ success: true, message: "Form deleted successfully" });
+  } catch (error) {
+    console.error("Delete form error:", error);
+    res.status(500).json({ error: "Failed to delete form" });
+  }
+};
 export {
   saveForm,
   getForm,
   getForms,
-  submitFormResponse
+  submitFormResponse,
+  deleteForm
 };

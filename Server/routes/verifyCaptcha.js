@@ -2,7 +2,7 @@ import express from "express";
 import axios from "axios";
 const router = express.Router();
 
-const SECRET_KEY = "6LeBF1QrAAAAALqn-JDUxrYgVp04IyCyccY59Rz0";
+const SECRET_KEY = process.env.SECRET_KEY;
 
 router.post("/api/verify-captcha", async (req, res) => {
   const token = req.body.token;
