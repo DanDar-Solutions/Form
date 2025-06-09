@@ -5,7 +5,8 @@ import {
   getForm,
   getForms,
   submitFormResponse,
-  deleteForm
+  deleteForm,
+  getResponses
 } from "../controller/formController.js"
 import {
   allUsers,
@@ -40,7 +41,7 @@ router.post("/forms",saveForm)
 router.get("/forms/:formId", getForm)
 router.get("/forms", getForms)
 router.post("/forms/:formId/responses", submitFormResponse)
-
+router.get("/forms/:formId/getResponses", getResponses)
 router.delete("/forms/:formId", deleteForm)
 
 export default router;

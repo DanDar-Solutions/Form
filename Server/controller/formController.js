@@ -71,10 +71,12 @@ const getForms = async (req, res) => {
 const submitFormResponse = async (req, res) => {
   const { formId } = req.params;
   const { responses } = req.body;
+
+  console.log("response", responses)
   
   try {
     // Check if form exists
-    const form = await Form.findOne({ formId });
+    const form = await Form.findById(formId);
     if (!form) {
       return res.status(404).json({ error: "Form not found" });
     }
@@ -114,10 +116,34 @@ const deleteForm = async (req, res) => {
     res.status(500).json({ error: "Failed to delete form" });
   }
 };
+
+
+
+const getResponses= async (req, res) => {
+  const { formId } = req.params;
+
+  try {
+    // formId нь actual MongoDB _id байж магадгүй
+    let formResponse = await FormResponse.find({ formId });
+
+    if (!formResponse) {
+      return res.status(404).json({ error: "Form responses not found" });
+    }
+
+    res.status(200).json(formResponse);
+  } catch (error) {
+    console.error("Get form error:", error);
+    res.status(500).json({ error: error.message });
+  }
+}
+
 export {
   saveForm,
   getForm,
   getForms,
   submitFormResponse,
-  deleteForm
+  deleteForm,
+  getResponses
 };
+
+

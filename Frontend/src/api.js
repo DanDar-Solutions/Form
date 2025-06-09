@@ -95,3 +95,12 @@ export async function submitFormResponse(formId, responses) {
     throw new Error(message);
   }
 }
+export async function getFormResponse(formId) {
+  if (!formId) throw new Error("Form not found");
+  try{const response = await axios.get(`${URL}/api/forms/${formId}/getResponses`,  );
+  console.log("response",response.data[0].responses[0].answer);
+  return response.data
+} 
+  catch(error){ throw error};
+  
+}

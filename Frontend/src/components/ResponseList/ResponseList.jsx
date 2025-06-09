@@ -16,17 +16,22 @@ function ResponseList({ responses = [] }) {   //
               {new Date(response.timestamp).toLocaleString()}
             </span>
           </div>
-          
+
           <div className="responseContent">
-            {Object.entries(response.answers).map(([questionId, answer]) => (
-              <div key={questionId} className="answer">
-                <div className="question">{answer.question}</div>
-                <div className="answerText">{answer.value}</div>
-              </div>
-            ))}
+            {response.responses ? (
+              Object.entries(response.responses).map(([questionId, answer]) => (
+                <div key={questionId} className="answer">
+                  <div className="question">{answer?.questionId || 'No question'}</div>
+                  <div className="answerText">{answer?.answer || 'No answer'}</div>
+                </div>
+              ))
+            ) : (
+              <div className="noAnswers">No answers provided</div>
+            )}
           </div>
         </div>
       ))}
+
     </div>
   );
 }
