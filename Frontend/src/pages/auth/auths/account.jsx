@@ -12,6 +12,7 @@ export default function Account() {
     localStorage.removeItem('logged')
     localStorage.removeItem('User')
     navigate('/', { replace: true })
+    setLogged(false)
   }
 
   useEffect(() => {
@@ -20,7 +21,6 @@ export default function Account() {
 
     if (!userId) {
       console.warn("userId олдсонгүй")
-      navigate('/', { replace: true })
       return
     }
 

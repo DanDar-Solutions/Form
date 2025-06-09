@@ -21,7 +21,7 @@ export default function Auth({ setLogged, logged }) {
   }, [setLogged]);
 
   if (logged) {
-    return <Account />;
+    return <Account setLogged={setLogged}/>;
   }
 
   return (
