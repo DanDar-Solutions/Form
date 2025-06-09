@@ -9,6 +9,8 @@ import Swap from "./types/Swap";
 import MultipleChoiceGrid from "./types/MultipleChoiceGrid";
 import TextInput from "./types/TextAnswer";
 import RadioInput from "./types/MultipleChoice";
+import Date from  "./types/Date"
+import Time from "./types/Time"
 
 import { getForm, submitFormResponse } from "../../api";
 

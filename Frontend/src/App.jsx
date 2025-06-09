@@ -21,7 +21,6 @@ function App() {
     });
 //////////////////////////////////////////////////////////
     useEffect(() => {
-    // Зөвхөн ScrollSmoother үүсгэх
     ScrollSmoother.create({
       wrapper: "#smooth-wrapper",
       content: "#smooth-content",

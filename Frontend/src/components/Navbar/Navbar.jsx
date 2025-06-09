@@ -373,12 +373,6 @@ function Navbar() {
           <Link to="/create">Create Form</Link>
         </li>
         <li>
-          <Link to="/responses/:formId">Responses</Link>
-        </li>
-        <li>
-          <Link to="/fill/:formId">Fill</Link>
-        </li>
-        <li>
           <Link to="/auth">
             <UserIcon />
           </Link>

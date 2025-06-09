@@ -70,13 +70,20 @@ export default function Home() {
                 <div 
                   key={form._id} 
                   className="form-card"
-                  onClick={() => navigate(`/fill/${form._id}`)}
                 >
                   <div className="form-card-content">
                     <h3>{form.title}</h3>
-                    <p className="form-date">
-                      {form.createdAt ? new Date(form.createdAt).toLocaleDateString() : new Date().toLocaleDateString()}
-                    </p>
+
+                    <div className='buttons-1'>
+                      <button className='button-1' onClick={() => navigate(`/fill/${form._id}`)} >Fill</button>
+                      <button className='button-2' onClick={() => navigate(`/responses/${form._id}`)} >Responses</button>
+                      <button className='button-del' onClick={() => null} >Delete</button>
+                    </div>
+                    <div className='buttons-2'>
+                      <p className="form-date">
+                        {form.createdAt ? new Date(form.createdAt).toLocaleDateString() : new Date().toLocaleDateString()}
+                      </p>
+                    </div>
                   </div>
                 </div>
               ))}
