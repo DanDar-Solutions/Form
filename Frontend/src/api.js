@@ -52,7 +52,9 @@ export async function saveForm(userId, formData) {
             createdBy: userId,
             ...formData,
         });
+        console.log(response)
         return response.data;
+
     } catch (error) {
         const message = error.response?.data?.message || error.message || 'Тодорхойгүй алдаа';
         console.error("Error while saving:", message);

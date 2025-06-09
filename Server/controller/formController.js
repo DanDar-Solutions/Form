@@ -24,7 +24,7 @@ const saveForm = async (req, res) => {
     user.forms.push(newForm._id);
     await user.save();
 
-    res.status(200).json({ message: "Form saved", formId: newForm.formId });
+    res.status(200).json({ message: "Form saved", formId: newForm._id });
   } catch (error) {
     console.error("Form save error:", error);
     res.status(500).json({ error: "Internal Server Error" });
@@ -123,13 +123,10 @@ const getResponses= async (req, res) => {
   const { formId } = req.params;
 
   try {
-    // formId нь actual MongoDB _id байж магадгүй
     let formResponse = await FormResponse.find({ formId });
-
     if (!formResponse) {
       return res.status(404).json({ error: "Form responses not found" });
     }
-
     res.status(200).json(formResponse);
   } catch (error) {
     console.error("Get form error:", error);

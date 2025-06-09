@@ -40,9 +40,10 @@ router.post("/auth/login", loginUser);
 router.post("/forms",saveForm)
 router.get("/forms/:formId", getForm)
 router.get("/forms", getForms)
+router.delete("/forms/:formId", deleteForm)
+
 router.post("/forms/:formId/responses", submitFormResponse)
 router.get("/forms/:formId/getResponses", getResponses)
-router.delete("/forms/:formId", deleteForm)
 
 export default router;
  

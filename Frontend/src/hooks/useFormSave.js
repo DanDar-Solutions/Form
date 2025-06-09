@@ -1,6 +1,7 @@
 import { useState } from 'react';
 import { v4 as uuidv4 } from 'uuid';
 import { saveForm } from "../api";
+import { data } from 'react-router-dom';
 
 export function useFormSave(onNotification) {
   const [isLoading, setIsLoading] = useState(false);
@@ -41,7 +42,7 @@ export function useFormSave(onNotification) {
       return;
     }
     
-    const formId = uuidv4();
+    const formId = data.formID
     const formData = {
       title,
       description,
@@ -49,14 +50,15 @@ export function useFormSave(onNotification) {
       formId
     };
     
-    const link = `localhost:5173/fill/${formId}`;
-    setFormLink(link);
     setIsLoading(true);
     
     try {
-      await saveForm(userId, formData);
+      const data = await saveForm(userId, formData);
+      console.log(data)
+      const link = `localhost:5173/fill/${data.formId}`;
       onNotification('Form saved successfully!', 'success');
       setShowFormLinkDialog(true);
+      setFormLink(link);
     } catch (error) {
       onNotification('Error saving form: ' + (error.message || 'Unknown error'), 'error');
     } finally {
