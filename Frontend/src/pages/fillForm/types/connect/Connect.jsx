@@ -183,7 +183,7 @@ export default function Connect({ question, value, onChange }) {
       
       <div className="gridContainer" ref={connectionsRef}>
         <div className="column">
-          <h4 className="title">Left Items</h4>
+          <h4 className="left">Left Items</h4>
           {leftItems.map(item => {
             const isConnected = getConnectedRight(item.id) !== null;
             const isSelected = selectedLeft === item.id;
@@ -212,7 +212,7 @@ export default function Connect({ question, value, onChange }) {
         </div>
         
         <div className="column">
-          <h4 className="title">Right Items</h4>
+          <h4 className="right">Right Items</h4>
           {rightItems.map(item => (
             <div key={item.id} className="item" id={`right-item-${item.id}`}>
               <button 

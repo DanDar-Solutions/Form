@@ -3,17 +3,6 @@ import { Link, useNavigate, useLocation } from 'react-router-dom';
 import './Navbar.css';
 
 // SVG Icons
-const UndoIcon = () => (
-  <svg width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
-    <path d="M12.5 8C9.85 8 7.45 8.99 5.6 10.6L2 7V16H11L7.38 12.38C8.77 11.22 10.54 10.5 12.5 10.5C16.04 10.5 19.05 12.81 20.1 16L22.47 15.22C21.08 11.03 17.15 8 12.5 8Z" fill="currentColor"/>
-  </svg>
-);
-
-const RedoIcon = () => (
-  <svg width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
-    <path d="M18.4 10.6C16.55 8.99 14.15 8 11.5 8C6.85 8 2.92 11.03 1.54 15.22L3.9 16C4.95 12.81 7.95 10.5 11.5 10.5C13.45 10.5 15.23 11.22 16.62 12.38L13 16H22V7L18.4 10.6Z" fill="currentColor"/>
-  </svg>
-);
 
 const PaletteIcon = () => (
   <svg width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
@@ -305,24 +294,6 @@ function Navbar() {
     }
   };
 
-  const handleUndo = () => {
-    if (history.length === 0) return;
-    
-    const prevStyle = history[history.length - 1];
-    setRedoStack([formStyle, ...redoStack]);
-    setHistory(history.slice(0, -1));
-    setFormStyle(prevStyle);
-  };
-
-  const handleRedo = () => {
-    if (redoStack.length === 0) return;
-    
-    const nextStyle = redoStack[0];
-    setHistory([...history, formStyle]);
-    setRedoStack(redoStack.slice(1));
-    setFormStyle(nextStyle);
-  };
-
   const handleDeleteForm = () => {
     console.log('Form deleted');
     // Add actual delete form logic
@@ -332,25 +303,12 @@ function Navbar() {
     <nav className="navbar">
       <div className="navbar-left">
         <div className="logo">
-          <Link to="/">Form clone GANG</Link>
+          <Link to="/">Form clone</Link>
         </div>
         <div className="navbar-actions">
           {isCreateRoute && (
             <>
-              <button 
-                className="action-button" 
-                onClick={handleUndo} 
-                disabled={history.length === 0}
-              >
-                <UndoIcon />
-              </button>
-              <button 
-                className="action-button" 
-                onClick={handleRedo} 
-                disabled={redoStack.length === 0}
-              >
-                <RedoIcon />
-              </button>
+
               <button 
                 className="action-button" 
                 onClick={() => setThemeMenuOpen(true)}

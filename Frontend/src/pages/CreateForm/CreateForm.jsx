@@ -96,18 +96,16 @@ function CreateForm({ logged }) {
           <button onClick={addQuestion} className={styles.addButton}>
             Add Question
           </button>
-          <div className={styles.rightActions}>
-            <button 
-              onClick={onSaveForm} 
-              className={styles.saveButton}
-              disabled={isLoading}
-            >
-              {isLoading ? 'Saving...' : 'Save Form'}
-            </button>
-            <button onClick={confirmClearForm} className={styles.clearButton}>
-              Clear Form
-            </button>
-          </div>
+          <button 
+            onClick={onSaveForm} 
+            className={styles.saveButton}
+            disabled={isLoading}
+          >
+            {isLoading ? 'Saving...' : 'Save Form'}
+          </button>
+          <button onClick={confirmClearForm} className={styles.clearButton}>
+            Clear Form
+          </button>
         </div>
       </div>
     </div>

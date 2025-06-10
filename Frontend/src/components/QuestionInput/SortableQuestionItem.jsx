@@ -34,7 +34,7 @@ function SortableQuestionItem({ id, question, onQuestionChange, onDelete }) {
           onDelete={onDelete}
           dragHandle={
             <div className={styles.dragHandle} {...attributes} {...listeners}>
-              ::
+              :::
             </div>
           }
         />

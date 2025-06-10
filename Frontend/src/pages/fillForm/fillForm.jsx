@@ -3,7 +3,7 @@ import { useParams, useNavigate } from 'react-router-dom';
 import styles from './fillForm.module.css';
 import useForm from '../../hooks/useForm';
 
-// Import question type components
+// Import question type
 import Connect from "./types/connect/Connect";
 import Swap from "./types/Swap";
 import MultipleChoiceGrid from "./types/MultipleChoiceGrid";
