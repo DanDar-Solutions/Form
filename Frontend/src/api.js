@@ -23,8 +23,8 @@ export async function createUser(userData) {
 }
 
 export async function updateUser(id, user) {
-    const response = await axios.put(`${URL}/api/users/${id}`, user)     // development needed
-    return response
+    const response = await axios.patch(`${URL}/api/users/${id}`, user)
+    return response;
 }
 
 export async function sendVerificationCode(email) {
@@ -108,6 +108,7 @@ export async function getFormResponse(formId) {
 }
 export async function verifyCaptcha(token) {
   try {
+    console.log(token)
     const response = await axios.post(`${URL}/api/verify-captcha`, { token });
     return response.data.success;
   } catch (error) {

@@ -1,41 +1,37 @@
+// /api/verify-captcha route
 import express from "express";
 import axios from "axios";
+import dotenv from "dotenv";
+dotenv.config(); // 👈 MUST be called before using process.env
+
+
 const router = express.Router();
 
-const SECRET_KEY = process.env.SECRET_KEY;
-
-router.post("/api/verify-captcha", async (req, res) => {
+router.post("/verify-captcha", async (req, res) => {
   const token = req.body.token;
 
   if (!token) {
-    return res.status(400).json({ success: false, message: "Token is missing" });
+    return res.status(400).json({ success: false, error: "No token provided" });
   }
 
   try {
-    // Google requires data to be sent as form data, not as JSON
-    const params = new URLSearchParams();
-    params.append('secret', SECRET_KEY);
-    params.append('response', token);
-
     const response = await axios.post(
       "https://www.google.com/recaptcha/api/siteverify",
-      params,
+      null,
       {
-        headers: {
-          'Content-Type': 'application/x-www-form-urlencoded'
+        params: {
+          secret: process.env.SECRET_KEY,  // .env файлаас авна
+          response: token
         }
       }
     );
 
-    console.log("reCAPTCHA verification response:", response.data);
+    const result = response.data;
+    console.log("reCAPTCHA backend response:", result);
 
-    if (response.data.success) {
-      res.json({ success: true });
-    } else {
-      res.json({ success: false, error: response.data["error-codes"] });
-    }
+    res.json({ success: result.success });
   } catch (error) {
-    console.error("reCAPTCHA verification error:", error.message);
+    console.error("Captcha verification error:", error.message);
     res.status(500).json({ success: false, error: "Verification failed" });
   }
 });

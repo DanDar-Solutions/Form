@@ -82,11 +82,11 @@ const updateUser = async (req, res) => {
   }
 
   try {
-    const user = await User.findOneAndUpdate({ _id: id }, req.body, { new: true });
-    if (!user) {
+    const updatedUser = await User.findOneAndUpdate({ _id: id }, req.body, { new: true });
+    if (!updatedUser) {
       return res.status(404).json({ error: "User not found" });
     }
-    res.status(200).json(user);
+    res.status(200).json(updatedUser);
   } catch (error) {
     res.status(500).json({ error: error.message });
   }
@@ -95,4 +95,3 @@ const updateUser = async (req, res) => {
 
 
 export { createUser, allUsers, getUser, deleteUser, updateUser,  };
- 
