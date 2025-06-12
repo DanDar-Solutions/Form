@@ -224,7 +224,7 @@ const useForm = (formId) => {
           }
           
           return {
-            questionId: questionId,
+            question: question,
             answer: answer,
             type: questionType
           };
