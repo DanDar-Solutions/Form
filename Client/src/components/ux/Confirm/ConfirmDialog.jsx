@@ -1,4 +1,3 @@
-import React from 'react';
 import './ConfirmDialog.css';                 // required things
 
 function ConfirmDialog({ 
