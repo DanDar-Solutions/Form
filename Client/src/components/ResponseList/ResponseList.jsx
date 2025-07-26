@@ -21,7 +21,7 @@ function ResponseList({ responses = [] }) {   //
             {response.responses ? (
               Object.entries(response.responses).map(([questionId, answer]) => (
                 <div key={questionId} className="answer">
-                  <div className="question">{answer?.questionId || 'No question'}</div>
+                  <div className="question">{answer?.question || 'No question'}</div>
                   <div className="answerText">{answer?.answer || 'No answer'}</div>
                 </div>
               ))

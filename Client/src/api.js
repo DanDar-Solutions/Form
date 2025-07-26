@@ -17,7 +17,7 @@ export async function createUser(userData) {
     const response = await axios.post(`${URL}/api/users`, userData);
     return response.data;  // user_id and messages
   } catch (error) {
-    console.error("User үүсгэхэд алдаа:", error);    // urj bui user ni undefined umu null baihad
+    console.error("User үүсгэхэд алдаа:", error);    // INVITE hiij  bui user ni undefined umu null baihad
     throw error;
   }
 }
